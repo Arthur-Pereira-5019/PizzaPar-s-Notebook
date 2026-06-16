@@ -1,12 +1,12 @@
 import re
 class Usuario():
-    def __init__(self, nome: str, email: str, senha: str, curso: str, publica: bool):
+    def __init__(self, nome: str, email: str, senha: str, curso: str):
         self.aptidoes = []
         self.nome = nome
         self.email = email
-        self.senha = self.validarSenha(senha)
+        self.senha = senha
         self.curso = curso
-        self.publica = publica
+        self.publica = False
     
     def isPublica(self):
         return self.publica
@@ -26,20 +26,11 @@ class Usuario():
             novasAptidoes.append("Naturezas")
         self.aptidoes = novasAptidoes
     
-    def setSenha(self, senha):
-        if(validarSenha(senha)):
-            senha = str(senha)
+    def setSenha(self, senha: str):
+        senha = senha
+    
+    def getEmail(self):
+        return self.email
         
-    def validarSenha(self,senha):
-        if(re.match("^.{8,}$",senha)):
-            if(re.match("/\\d/",senha)):
-                if(re.match("^(?=.*[A-Z]).+$",senha)):
-                    return True
-                else:
-                    print("A senha precisa ter pelo menos um maiúsculo")
-            else:
-                print("A senha precisa possuir pelo menos um número")
-        else:
-            print("A senha precisa possuir pelo menos 8 caracteres.")
-        return False
+    
     
