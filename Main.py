@@ -5,10 +5,12 @@ usuario_logado = None
 estado = "Fora"
 
 def estado_registrando():
+    global estado
     print("Preencha os campos abaixo, preencha o nome com Sair para retornar.")
     while True:
         nome = input("Digite o seu nome de usuário: ")
-        if(nome.lower() == "Sair"):
+        if(nome.lower() == "sair"):
+            estado = "Fora"
             break
         email = input("Digite o E-Mail da sua conta: ")
         if(not us.verificar_email(email)):
@@ -57,8 +59,39 @@ def state_resolver():
         estado_login()
     elif estado == "Registrando":
         estado_registrando()
+    elif estado == "Menu":
+        estado_menu()
+
+def estado_menu():
+    global estado
+    while True:
+        opcao = input("O que voce deseja realizar?\n[Hoje]\n[Consultar Biblioteca]\n[Sugerir Estudos]\n[Parceiros de Estudos]\n[Consultar Situação]\n[Encerrar o dia]\n[adicionar disciplinas]\n[Configurações]\n")
+        match opcao.lower():
+            case "hoje":
+                hoje()
+            case "consultar biblioteca":
+                consultar_biblioteca()
+            case "sugerir estudos":
+                sugerir_estudos()
+            case "parceiros de estudos":
+                parceiros_de_estudos()
+            case "consultar situação":
+                consultar_situacao()
+            case "encerrar o dia":
+                encerrar_o_dia()
+            case "configurações":
+                configuracoes()
+            case "adicionar disciplinas":
+                adicionar_disciplinas()
+            
+            
+
+def adicionar_disciplinas():
+    print(type(usuario_logado))
+    
 
 while True:
+    print(estado)
     state_resolver()
     
 
