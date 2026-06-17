@@ -7,12 +7,16 @@ class Usuario():
         self.senha = senha
         self.curso = curso
         self.publica = False
+        self.bu_multa = 0
+        self.bu_renovacoes = 0
+        self.bu_tempo_emprestimo = 0
+        self.bu_distancia = 0
     
     def isPublica(self):
         return self.publica
     
     def switchPublicidade(self):
-        self.publica = not publica
+        self.publica = not self.publica
         
     def setAptidoes(self,linguagens,matematica,humanas,naturezas):
         novasAptidoes = []
