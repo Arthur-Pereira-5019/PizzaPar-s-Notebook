@@ -1,4 +1,7 @@
 from Anotacoes import Anotacoes
+from Listas import Listas
+from Provas import Provas
+from Duvidas import Duvidas
 
 class Disciplina:
     def __init__(self, nome, dias, duracao, hora):
@@ -34,7 +37,25 @@ class DisciplinaCurricular(Disciplina):
         super().__init__(nome, dias, duracao, hora)
         self.diasAtendimento = diasAtendimento
         self.anotacoes = []
+        self.listas = []
+        self.provas = []
+        self.duvidas = []
+        self.bibliografia = []
         
     def addAnotacoes(self, data, texto):
         self.anotacoes.append(Anotacoes(data, texto))
+    
+    def addListas(self, data):
+        self.listas.append(Listas(data))
+        
+    def addProvas(self, data):
+        self.provas.append(Provas(data))
+        
+    def addDuvidas(self, data, texto):
+        self.duvidas.append(Duvidas(data, texto))
+        
+    def addBibliografia(self, livro):
+        self.bibliografia.append(livro)
+    
+    
         
