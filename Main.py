@@ -1,8 +1,36 @@
+from datetime import date, datetime, timedelta
 from UsuarioService import *
+from Disciplina import *
+from Livros import *
+from MochilaDeLivros import *
 
 us = UsuarioService()
-usuario_logado = None
+usuario_logado: Usuario = None
 estado = "Fora"
+offsetDias = 0
+
+def data_de_hoje():
+    return date.today()+timedelta(offsetDias)
+
+def dia_da_semana():
+    return data_de_hoje().weekday()
+
+def estado_cadastrando_livros(disciplina: DisciplinaCurricular, emprestando: bool):
+    global estado
+    global usuario_logado
+    hoje = data_de_hoje()
+    print("Informe os campos abaixo para registrar o novo livro. Preencha o nome com sair para encerrar o registro.")
+    while True:
+        nomeDoLivro = input("Digite o nome do livro: ")
+        nomeDoAutor = input("Autor do livro: ")
+        edicao = int(input("Digite o número da edição do livro: "))
+        if disciplina is None:
+            l = Livro(nomeDoLivro,data_de_hoje(),nomeDoAutor,edicao,usuario_logado.getBuTempo(),hoje)
+            usuario_logado.mochilaDeLivros.adicionar(l)
+        else:
+            l = Livro(nomeDoLivro,nomeDoAutor,edicao)
+            disciplina.addBibliografia(l)
+
 
 def estado_registrando():
     global estado

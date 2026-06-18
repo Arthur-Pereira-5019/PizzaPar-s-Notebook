@@ -1,4 +1,7 @@
 import re
+from Disciplina import *
+from MochilaDeLivros import *
+
 class Usuario():
     def __init__(self, nome: str, email: str, senha: str, curso: str):
         self.aptidoes = []
@@ -11,7 +14,9 @@ class Usuario():
         self.bu_renovacoes = 0
         self.bu_tempo_emprestimo = 0
         self.bu_distancia = 0
-    
+        self.disciplinas = []
+        self.mochilaDeLivros = MochilaDeLivros()
+
     def isPublica(self):
         return self.publica
     
@@ -35,6 +40,18 @@ class Usuario():
     
     def getEmail(self):
         return self.email
-        
-    
-    
+
+    def addDisciplina(self, nome, dias, duracao, hora):
+        self.disciplinas.append(Disciplina(nome, dias, duracao, hora))
+
+    def addDisciplinaEsportiva(self, nome, dias, duracao, hora, diasDisputa):
+        self.disciplinas.append(DisciplinaEsportiva(nome, dias, duracao, hora, diasDisputa))
+
+    def addDisciplinaCurricular(self, nome, dias, duracao, hora, diasAtendimento):
+        self.disciplinas.append(DisciplinaCurricular(nome, dias, duracao, hora, diasAtendimento))
+
+    def getDisciplinas(self):
+        return self.disciplinas
+
+    def getBuTempo(self):
+        return self.bu_tempo_emprestimo
