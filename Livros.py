@@ -43,7 +43,13 @@ class Livro:
         else:
             return t*taxa
 
-    def exibicao(self,taxa,date):
+    def exibicao(self,taxa,dia: date):
+        da = self.dias_ate_vencer(dia)
         if not self.emprestado:
-            return f"{self.titulo} {self.edicao}ed {self.autor}"
-        return f"{self.titulo} {self.edicao}ed {self.autor}. Devolução: {self.data_de_devolucao}. Multa: {self.calcularMulta()}R$"
+            return self.exibicao_simples()
+        if da < 0:
+            return f"{self.titulo} {self.edicao}ed {self.autor}. Atrasado em {da*-1} dias!. Multa: {self.calcularMulta(taxa,dia)}R$"
+        return f"{self.titulo} {self.edicao}ed {self.autor}. Devolução: {self.data_de_devolucao}"
+
+    def exibicao_simples(self):
+        return f"{self.titulo} {self.edicao}ed {self.autor}"
