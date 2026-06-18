@@ -21,47 +21,50 @@ def estado_cadastrando_livros(disciplina: DisciplinaCurricular, emprestando: boo
     hoje = data_de_hoje()
     print("Informe os campos abaixo para registrar o novo livro. Preencha o nome com sair para encerrar o registro.")
     while True:
-        nomeDoLivro = input("Digite o nome do livro: ")
-        nomeDoAutor = input("Autor do livro: ")
+        titulo = input("Digite o título do livro: ")
+        autor = input("Autor do livro: ")
         edicao = int(input("Digite o número da edição do livro: "))
         if disciplina is None:
-            l = Livro(nomeDoLivro,data_de_hoje(),nomeDoAutor,edicao,usuario_logado.getBuTempo(),hoje)
-            usuario_logado.mochilaDeLivros.adicionar(l)
+            l = Livro(titulo,autor,edicao)
+            usuario_logado.mochilaDeLivros.adicionar(l,hoje)
         else:
-            l = Livro(nomeDoLivro,nomeDoAutor,edicao)
+            l = Livro(titulo,autor,edicao)
             disciplina.addBibliografia(l)
 
 
 def estado_registrando():
     global estado
-    print("Preencha os campos abaixo, preencha o nome com Sair para retornar.")
+    global usuario_logado
+    print("Preencha os campos abaixo, preencha o nome com sair para retornar.")
     while True:
         nome = input("Digite o seu nome de usuário: ")
-        if(nome.lower() == "sair"):
+        if nome.lower() == "sair":
             estado = "Fora"
             break
         email = input("Digite o E-Mail da sua conta: ")
-        if(not us.verificar_email(email)):
+        if not us.verificar_email(email):
             continue
-        senha = input("Digite a senha da sua conta:" )
-        if(not us.validarSenha(senha)):
+        senha = input("Digite a senha da sua conta: ")
+        if not us.validarSenha(senha):
             continue
-        curso = input("Digite o principal curso no qual você está estudando:" )
+        curso = input("Digite o principal curso no qual você está estudando: ")
         r = us.registrar(nome,email,senha,curso)
-        if(not r == None):
+        if not r is None:
             usuario_logado = r
             estado = "Menu"
             break
 
 def estado_login():
+    global estado
+    global usuario_logado
     print("Preencha os campos abaixo, preencha o E-Mail com Sair para retornar.")
     while True:
-        nome = input("Digite o nome da sua conta: ")
-        if(email.lower() == "Sair"):
+        email = input("Digite o email da sua conta: ")
+        if email.lower() == "sair":
             break
-        senha = input("Digite a senha da sua conta:" )
+        senha = input("Digite a senha da sua conta: ")
         r = us.login(email,senha)
-        if(not r == None):
+        if not r is None:
             usuario_logado = r
             estado = "Menu"
             break
@@ -70,10 +73,10 @@ def estado_fora():
     global estado
     while True:
         opcao = input("Você deseja realizar [Login] ou se [Registrar]? ")
-        if(opcao.lower() == "login"):
+        if opcao.lower() == "login":
             estado = "Logando"
             break
-        elif(opcao.lower() == "registrar"):
+        elif opcao.lower() == "registrar":
              estado = "Registrando"
              break
         else:

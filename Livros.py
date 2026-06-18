@@ -1,20 +1,12 @@
 from datetime import date, datetime, timedelta
 class Livro:
-    def __init__(self, nome: str, autor: str, edicao: int):
-        self.nome = nome
+    def __init__(self, titulo: str, autor: str, edicao: int):
+        self.titulo = titulo
         self.data_de_emprestimo = None
         self.autor = autor
         self.edicao = edicao
         self.emprestado = False
         self.data_de_devolucao = None
-
-    def __init__(self, nome: str, data_de_emprestimo: date, autor: str, edicao: int, prazo_devolucao: int, dia: date):
-        self.nome = nome
-        self.data_de_emprestimo = data_de_emprestimo
-        self.autor = autor
-        self.edicao = edicao
-        self.emprestado = True
-        self.data_de_devolucao = dia + timedelta(prazo_devolucao)
 
     def pegar(self, dia: date, prazo_devolucao: int):
         if not self.emprestado:
@@ -45,4 +37,13 @@ class Livro:
         return (self.data_de_devolucao-dia).days
 
     def calcularMulta(self, taxa: float, dia: date):
-        return self.dias_ate_vencer(dia)*taxa
+        t = self.dias_ate_vencer(dia)
+        if t > 0:
+            return 0.0
+        else:
+            return t*taxa
+
+    def exibicao(self,taxa,date):
+        if not self.emprestado:
+            return f"{self.titulo} {self.edicao}ed {self.autor}"
+        return f"{self.titulo} {self.edicao}ed {self.autor}. Devolução: {self.data_de_devolucao}. Multa: {self.calcularMulta()}R$"

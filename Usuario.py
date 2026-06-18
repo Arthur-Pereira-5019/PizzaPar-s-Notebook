@@ -10,10 +10,6 @@ class Usuario():
         self.senha = senha
         self.curso = curso
         self.publica = False
-        self.bu_multa = 0
-        self.bu_renovacoes = 0
-        self.bu_tempo_emprestimo = 0
-        self.bu_distancia = 0
         self.disciplinas = []
         self.mochilaDeLivros = MochilaDeLivros()
 
@@ -52,6 +48,3 @@ class Usuario():
 
     def getDisciplinas(self):
         return self.disciplinas
-
-    def getBuTempo(self):
-        return self.bu_tempo_emprestimo
