@@ -49,3 +49,10 @@ class MochilaDeLivros:
 
     def organizar(self, dia: date):
         self.livros = sorted(self.livros, key=lambda l: (l.calcularMulta(self.multa,dia), l.data_de_devolucao, l.titulo))
+
+    def livrosADevolverHoje(self, dia: date):
+        devolver = []
+        for i in range(len(self.livros)):
+            if self.livros[i].dias_ate_vencer(dia) == 0:
+                devolver.append(self.livros[i])
+        return devolver

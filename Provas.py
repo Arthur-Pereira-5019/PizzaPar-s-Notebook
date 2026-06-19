@@ -8,11 +8,11 @@ class Provas:
     
     def getNota(self):
         if self.nota != -1:
-            return(self.nota)
+            return self.nota
         else:
-            return(0)
+            return 0
 
     def getData(self):
-        return(self.data)
+        return self.data
     
     

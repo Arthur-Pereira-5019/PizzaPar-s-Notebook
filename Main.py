@@ -3,22 +3,40 @@ from UsuarioService import *
 from Disciplina import *
 from Livros import *
 from MochilaDeLivros import *
+from ModuloTempo import *
 
 us = UsuarioService()
+mt = ModuloTempo()
 usuario_logado: Usuario = None
 estado = "Fora"
-offsetDias = 0
 
-def data_de_hoje():
-    return date.today()+timedelta(offsetDias)
+def estado_hoje():
+    hoje = mt.data_de_hoje()
+    print(mt.exibir_dia_da_semana())
+    print("\n")
 
-def dia_da_semana():
-    return data_de_hoje().weekday()
+    livrosADevolver = usuario_logado.mochilaDeLivros.livrosADevolverHoje(hoje)
+    if len(livrosADevolver) != 0:
+        print("Livros à Devolver Hoje:")
+        for i in range(len(livrosADevolver)):
+            print(livrosADevolver[i].exibicao_simples())
+        print("\n")
+    else:
+        print("Sem livros à devolver hoje. \n")
+    disciplinas = usuario_logado.provasHoje(hoje)
+    if len(disciplinas) != 0:
+        print("Provas de hoje:")
+        for i in range (disciplinas):
+            print(f"Prova de {disciplinas[i].get_nome()} às {disciplinas[i].get_hora()}")
+
+
+
+
 
 def estado_cadastrando_livros(disciplina: DisciplinaCurricular, emprestando: bool):
     global estado
     global usuario_logado
-    hoje = data_de_hoje()
+    hoje = mt.data_de_hoje()
     print("Informe os campos abaixo para registrar o novo livro. Preencha o nome com sair para encerrar o registro.")
     while True:
         titulo = input("Digite o título do livro: ")
@@ -96,11 +114,11 @@ def state_resolver():
 def estado_menu():
     global estado
     while True:
-        opcao = input("O que voce deseja realizar?\n[Hoje]\n[Consultar Biblioteca]\n[Sugerir Estudos]\n[Parceiros de Estudos]\n[Consultar Situação]\n[Encerrar o dia]\n[adicionar disciplinas]\n[Configurações]\n")
+        opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\n[Consultar Mochila] de Livros\n[Sugerir Estudos]\nBuscar [Parceiros de Estudos]\n[Consultar Situação] das notas de hoje.\n[Encerrar o dia]\n[adicionar disciplinas]\n[Configurações] da sua Conta\n")
         match opcao.lower():
             case "hoje":
-                hoje()
-            case "consultar biblioteca":
+                estado_hoje()
+            case "consultar mochila":
                 consultar_biblioteca()
             case "sugerir estudos":
                 sugerir_estudos()

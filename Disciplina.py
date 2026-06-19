@@ -49,13 +49,20 @@ class DisciplinaCurricular(Disciplina):
         self.listas.append(Listas(data))
         
     def addProvas(self, data):
-        self.provas.append(Provas(data))
+        for i in range(len(self.provas)):
+            if self.provas[i].getData == data:
+                print("Erro: Já há uma prova registrada nesse dia e nesta disciplina!")
+            else:
+                self.provas.append(Provas(data))
         
     def addDuvidas(self, data, texto):
         self.duvidas.append(Duvidas(data, texto))
         
     def addBibliografia(self, livro):
         self.bibliografia.append(livro)
+
+    def getProvas(self):
+        return self.provas
     
     
         

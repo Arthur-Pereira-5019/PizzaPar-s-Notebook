@@ -10,7 +10,7 @@ class Usuario():
         self.senha = senha
         self.curso = curso
         self.publica = False
-        self.disciplinas = []
+        self.disciplinas: list[Disciplina] = []
         self.mochilaDeLivros = MochilaDeLivros()
 
     def isPublica(self):
@@ -48,3 +48,14 @@ class Usuario():
 
     def getDisciplinas(self):
         return self.disciplinas
+
+    def provasHoje(self,dia:date):
+        provasHoje = []
+        for i in range(len(self.disciplinas)):
+            disciplina = self.disciplinas[i]
+            if isinstance(disciplina,DisciplinaCurricular):
+                provas = disciplina.getProvas()
+                for j in range(len(provas)):
+                    if provas[j].getData == dia:
+                        provasHoje.append(disciplina)
+        return provasHoje

@@ -27,6 +27,16 @@ class Livro:
         if self.emprestado:
             offset = self.dias_ate_vencer(dia)
             if offset < 0:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def exibir_atraso(self, dia: date):
+        if self.emprestado:
+            offset = self.dias_ate_vencer(dia)
+            if offset < 0:
                 print(f"O livro está atrasado em {offset} dias")
             else:
                 print(f"O livro não está atrasado.")
