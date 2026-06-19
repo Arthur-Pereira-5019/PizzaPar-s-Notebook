@@ -1,4 +1,5 @@
 from datetime import date, datetime, timedelta
+
 class Livro:
     def __init__(self, titulo: str, autor: str, edicao: int):
         self.titulo = titulo
@@ -63,3 +64,8 @@ class Livro:
 
     def exibicao_simples(self):
         return f"{self.titulo} {self.edicao}ed {self.autor}"
+
+    def __eq__(self, other):
+        if (self.autor == other.autor) and (self.titulo == other.titulo) and (self.edicao == other.edicao):
+            return True
+        return False

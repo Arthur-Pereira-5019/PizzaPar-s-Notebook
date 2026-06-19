@@ -1,18 +1,17 @@
 from Livros import *
+from Disciplina import *
 class MochilaDeLivros:
     def __init__(self):
         self.livros: list[Livro] = []
         self.multa = 0.0
         self.renovacoes = 0
         self.tempo_emprestimo = 0
-        self.distancia = 0
         self.configurada = False
 
-    def configurar(self, multa, renovacoes, tempo_emprestimo, distancia):
+    def configurar(self, multa, renovacoes, tempo_emprestimo):
         self.multa = multa
         self.renovacoes = renovacoes
         self.tempo_emprestimo = tempo_emprestimo
-        self.distancia = distancia
         self.configurada = True
 
     def devolver(self, indice: int, dia: date):
@@ -56,3 +55,18 @@ class MochilaDeLivros:
             if self.livros[i].dias_ate_vencer(dia) == 0:
                 devolver.append(self.livros[i])
         return devolver
+
+    def cruzarBibliografia(self, disciplina: DisciplinaCurricular):
+        biblio = disciplina.getBibliografia()
+        faltantes = []
+        for i in range (len(biblio)):
+            if biblio[i] in self.livros:
+                continue
+            else:
+                faltantes.append(biblio)
+        return faltantes
+
+    def isConfigurada(self):
+        return self.configurada
+
+    def gerarResumo(self, dia):

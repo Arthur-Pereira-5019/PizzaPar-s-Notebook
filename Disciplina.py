@@ -63,6 +63,9 @@ class DisciplinaCurricular(Disciplina):
 
     def getProvas(self):
         return self.provas
+
+    def getBibliografia(self):
+        return self.bibliografia
     
     
         

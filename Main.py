@@ -29,6 +29,25 @@ def estado_hoje():
         for i in range (disciplinas):
             print(f"Prova de {disciplinas[i].get_nome()} às {disciplinas[i].get_hora()}")
 
+def estado_configurando_mochila():
+    global estado
+    print("Preencha os campos abaixo para configurar sua mochila de livros. Preencha o número de renovações com -1 para retornar ao menu principal.")
+    while True:
+        n_renovacoes = int(input("Digite o número máximo de renovações da biblioteca que você se consulta: "))
+        if n_renovacoes == -1:
+            estado = "Menu"
+            break
+        multa = float(input("Digite a multa por dia da sua biblioteca em R$: "))
+        dias_emprestimo = int(input("Digite o número de dias que um empréstimo/renovação te permite ficar com exemplar em sua biblioteca: "))
+        usuario_logado.mochilaDeLivros.configurar(multa,n_renovacoes,dias_emprestimo)
+
+def estado_mochila():
+    global estado
+    hoje = mt.data_de_hoje()
+    if usuario_logado.mochilaDeLivros.isConfigurada():
+        return
+    else:
+        estado = "Configurando Mochila"
 
 
 
@@ -100,6 +119,28 @@ def estado_fora():
         else:
             print("Operação não identificada, tente novamente.")
 
+def estado_menu():
+    global estado
+    while True:
+        opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\n[Consultar Mochila] de Livros\n[Sugerir Estudos]\nBuscar [Parceiros de Estudos]\n[Consultar Situação] das notas de hoje.\n[Encerrar o dia]\n[adicionar disciplinas]\n[Configurações] da sua Conta\n")
+        match opcao.lower():
+            case "hoje":
+                estado = "Hoje"
+            case "consultar mochila":
+                estado = "Mochila"
+            case "sugerir estudos":
+                estado = "Sugerindo Estudos"
+            case "parceiros de estudos":
+                estado = "Parceiros de Estudos"
+            case "consultar situação":
+                estado = "Situacao Academica"
+            case "encerrar o dia":
+                estado = "Fim do Dia"
+            case "configurações":
+                estado = "Configurando Conta"
+            case "adicionar disciplinas":
+                estado = "Adicionando Disciplinas"
+
 def state_resolver():
     global estado
     if estado == "Fora":
@@ -110,28 +151,11 @@ def state_resolver():
         estado_registrando()
     elif estado == "Menu":
         estado_menu()
+    elif estado == "Configurando Mochila":
+        estado_configurando_mochila()
 
-def estado_menu():
-    global estado
-    while True:
-        opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\n[Consultar Mochila] de Livros\n[Sugerir Estudos]\nBuscar [Parceiros de Estudos]\n[Consultar Situação] das notas de hoje.\n[Encerrar o dia]\n[adicionar disciplinas]\n[Configurações] da sua Conta\n")
-        match opcao.lower():
-            case "hoje":
-                estado_hoje()
-            case "consultar mochila":
-                consultar_biblioteca()
-            case "sugerir estudos":
-                sugerir_estudos()
-            case "parceiros de estudos":
-                parceiros_de_estudos()
-            case "consultar situação":
-                consultar_situacao()
-            case "encerrar o dia":
-                encerrar_o_dia()
-            case "configurações":
-                configuracoes()
-            case "adicionar disciplinas":
-                adicionar_disciplinas()
+
+
             
             
 
