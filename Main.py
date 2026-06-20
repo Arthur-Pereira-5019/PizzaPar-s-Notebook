@@ -202,6 +202,8 @@ def estado_login():
 
 def estado_fora():
     global estado
+    global usuario_logado
+    usuario_logado = None
     while True:
         opcao = input("Você deseja realizar [Login] ou se [Registrar]? ")
         if opcao.lower() == "login":
@@ -216,24 +218,29 @@ def estado_fora():
 def estado_menu():
     global estado
     while True:
-        opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\n[Consultar Mochila] de Livros\n[Sugerir Estudos]\nBuscar [Parceiros de Estudos]\n[Consultar Situação] das notas de hoje.\n[Encerrar o dia]\n[adicionar disciplinas]\n[Configurações] da sua Conta\nEfetuar [Logout]\n")
+        opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\nConsultar [Mochila] de Livros\n[Sugerir "
+                      "Estudos]\nBuscar [Parceiros] de Estudos\n[Consultar Situação] das notas.\nEncerrar o "
+                      "[Dia]\n[Adicionar] disciplinas\n[Configurações] da sua Conta\nEfetuar [Logout]\n")
         match opcao.lower():
             case "hoje":
                 estado = "Hoje"
-            case "consultar mochila":
+            case "mochila":
                 estado = "Mochila"
             case "sugerir estudos":
                 estado = "Sugerindo Estudos"
-            case "parceiros de estudos":
+            case "parceiros":
                 estado = "Parceiros de Estudos"
             case "consultar situação":
                 estado = "Situacao Academica"
-            case "encerrar o dia":
+            case "dia":
                 estado = "Fim do Dia"
             case "configurações":
                 estado = "Configurando Conta"
-            case "adicionar disciplinas":
+            case "adicionar":
                 estado = "Adicionando Disciplinas"
+            case "logout":
+                print("Saindo...\n")
+                estado = "Fora"
             case _:
                 print("Comando não compreendido, cheque a síntaxe do comando e tente novamente.")
         if estado != "Menu":
