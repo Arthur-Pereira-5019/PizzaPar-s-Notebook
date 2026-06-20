@@ -32,7 +32,10 @@ class Usuario():
         self.aptidoes = novasAptidoes
     
     def setSenha(self, senha: str):
-        senha = senha
+        self.senha = senha
+
+    def getSenha(self):
+        return self.senha
     
     def getEmail(self):
         return self.email

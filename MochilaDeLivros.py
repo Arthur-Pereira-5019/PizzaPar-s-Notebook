@@ -107,11 +107,10 @@ class MochilaDeLivros:
         print("\n")
 
     def gerarResumo(self, dia):
-        devolverHoje = self.livrosADevolverHoje(dia)
         nAtrasados = len(self.livrosAtrasados(dia))
         nDevolver = len(self.livrosADevolverHoje(dia))
 
-        print(f"Você está com {len(self.livros)} em sua mochila")
+        print(f"Você está com {len(self.livros)} livros em sua mochila")
         if nAtrasados > 0:
             multaAcumulada = self.multaAcumulada(dia)
             print(f"Existem {nAtrasados} livros atrasados, gerando uma multa de: {multaAcumulada}R$.")

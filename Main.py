@@ -39,8 +39,17 @@ def estado_configurando_mochila():
             estado = "Menu"
             break
         multa = float(input("Digite a multa por dia da sua biblioteca em R$: "))
+        if multa < 0:
+            print("Por favor, digite um valor de multa válido.")
+            continue
         dias_emprestimo = int(input("Digite o número de dias que um empréstimo/renovação te permite ficar com exemplar em sua biblioteca: "))
+        if dias_emprestimo < 0:
+            print("Por favor, digite um número de dias válido.")
+            continue
         usuario_logado.mochilaDeLivros.configurar(multa,n_renovacoes,dias_emprestimo)
+        print("Agora sim, podemos olhar sua mochila!")
+        estado = "Mochila"
+        break
 
 def estado_mochila():
     global estado
@@ -256,7 +265,7 @@ def state_resolver():
 def adicionar_disciplinas():
     print(type(usuario_logado))
     
-
+us.registrar("Arthur","peneir20@gmail.com","abC..123","CC")
 while True:
     print(estado)
     state_resolver()
