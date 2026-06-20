@@ -336,10 +336,19 @@ def state_resolver():
         estado = "Menu"
     elif estado == "Configurando Conta":
         estado_configurando_conta()
+    elif estado == "Adicionando Disciplinas":
+        adicionar_disciplinas()
 
 
 def adicionar_disciplinas():
-    print(type(usuario_logado))
+    global estado
+    tipo = input("[Curricular] ou [Esportiva]?")
+    if tipo == "Curricular":
+        usuario_logado.addDisciplinaCurricular(input("Nome do Disciplina: "), input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n"), input("Duração da disciplina (em dias): "), input("Horario: "), input("Dias de Atendimento:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n"))
+    if tipo == "Esportiva":
+        usuario_logado.addDisciplinaEsportiva(input("Nome do Disciplina: "), input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n"),input("Duração da disciplina (em dias): "), input("Horario: "), input("Dias de Disputa (DD/MM): "))
+
+    estado = "Menu"
     
 us.registrar("Arthur","peneir20@gmail.com","abC..123","CC")
 us.registrar("Arthur1","peneir21@gmail.com","abC..123","CC")
