@@ -1,5 +1,23 @@
 from Usuario import *
 
+
+def validarSenha(senha):
+    if re.match("^.{8,}$", senha):
+        if re.match("^.*\d.*$", senha):
+            if re.match("^(?=.*[a-z]).+$", senha):
+                if re.match("^(?=.*[A-Z]).+$", senha):
+                    return True
+                else:
+                    print("A senha precisa ter pelo menos um caractere maiúsculo")
+            else:
+                print("A senha precisa ter pelo menos um caractere minúsculo")
+        else:
+            print("A senha precisa possuir pelo menos um número")
+    else:
+        print("A senha precisa possuir pelo menos 8 caracteres.")
+    return False
+
+
 class UsuarioService():
     usuarios = []
     
@@ -7,14 +25,14 @@ class UsuarioService():
         #global self.usuarios
         encontrado = False
         for i in range (len(self.usuarios)):
-            if(usuario[i].getEmail() == email):
+            if self.usuarios[i].getEmail() == email:
                 encontrado = True
-                if(usuario[i].getSenha() == senha):
-                    return usuario[i]
+                if self.usuarios[i].getSenha() == senha:
+                    return self.usuarios[i]
                 else:
                     print("Senha incorreta, digite novamente.")
                     return None
-        if(encontrado == False):
+        if encontrado == False:
             print("Usuário não encontrado, verifique a ortografia do E-Mail.")
             return None
     
@@ -34,18 +52,3 @@ class UsuarioService():
                 return False
         return True
     
-    def validarSenha(self,senha):
-        if(re.match("^.{8,}$",senha)):
-            if(re.match("^.*\d.*$",senha)):
-                if(re.match("^(?=.*[a-z]).+$",senha)):
-                    if(re.match("^(?=.*[A-Z]).+$",senha)):
-                        return True
-                    else:
-                        print("A senha precisa ter pelo menos um maiúsculo")
-                else:
-                    print("A senha precisa ter pelo menos um minúsculo")
-            else:
-                print("A senha precisa possuir pelo menos um número")
-        else:
-            print("A senha precisa possuir pelo menos 8 caracteres.")
-        return False

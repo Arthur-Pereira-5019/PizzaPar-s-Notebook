@@ -5,6 +5,7 @@ class Livro:
         self.titulo = titulo
         self.data_de_emprestimo = None
         self.autor = autor
+        self.nRenovacoes = 0
         self.edicao = edicao
         self.emprestado = False
         self.data_de_devolucao = None
@@ -33,6 +34,10 @@ class Livro:
                 return False
         else:
             return False
+
+    def renovar(self, dia: date, tempo):
+        self.nRenovacoes += 1
+        self.data_de_devolucao = dia + timedelta(tempo)
 
     def exibir_atraso(self, dia: date):
         if self.emprestado:
@@ -69,3 +74,6 @@ class Livro:
         if (self.autor == other.autor) and (self.titulo == other.titulo) and (self.edicao == other.edicao):
             return True
         return False
+
+    def gNRenovacoes(self):
+        return self.gNRenovacoes()

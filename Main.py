@@ -8,6 +8,7 @@ from ModuloTempo import *
 us = UsuarioService()
 mt = ModuloTempo()
 usuario_logado: Usuario = None
+estado_disciplina = None
 estado = "Fora"
 
 def estado_hoje():
@@ -33,7 +34,7 @@ def estado_configurando_mochila():
     global estado
     print("Preencha os campos abaixo para configurar sua mochila de livros. Preencha o número de renovações com -1 para retornar ao menu principal.")
     while True:
-        n_renovacoes = int(input("Digite o número máximo de renovações da biblioteca que você se consulta: "))
+        n_renovacoes = int(input("Digite o número máximo de renovações da biblioteca que você consulta: "))
         if n_renovacoes == -1:
             estado = "Menu"
             break
@@ -45,20 +46,104 @@ def estado_mochila():
     global estado
     hoje = mt.data_de_hoje()
     if usuario_logado.mochilaDeLivros.isConfigurada():
-        return
+        usuario_logado.mochilaDeLivros.gerarResumo(hoje)
+        estado = "Mochila Opcoes"
     else:
+        print("Pelo que parece sua mochila de livros ainda não está configurada, vamos resolver isso!")
         estado = "Configurando Mochila"
 
+def estado_adicionando_livro():
+    global estado
+    hoje = mt.data_de_hoje()
+    while True:
+        opa = input("Você deseja adicionar um livro com base na bibliografia de alguma disciplina? [S/N/C]")
+        opa = opa.lower()
+        if opa == "s":
+            disciplinas = usuario_logado.getDisciplinasCurriculares()
+            usuario_logado.exibirDisciplinasCurriculares()
+            i = int(input("Digite o índice da disciplina que você deseja consultar bibliografia"))
+            if i > 0 or i <= len(disciplinas):
+                biblio = usuario_logado.mochilaDeLivros.cruzarBibliografia(disciplinas[i - 1])
+                if len(biblio) == 0:
+                    print("A sua bibliografia para esta disciplina está completa.")
+                else:
+                    print("Faltam estes livros em sua bibliografia: ")
+                    for j in range(len(biblio)):
+                        print(f"{i + 1}. {biblio[i].exibicaoSimples()}")
+                    k = (input(
+                        "Digite o índice do livro que você deseja adicionar a sua mochila. Ou preencha com sair para retornar ao menu principal."))
+                    if k.lower() == "sair":
+                        estado = "Menu"
+                        break
+                    k = int(k)
+                    if k > 0 or k <= len(disciplinas):
+                        usuario_logado.mochilaDeLivros.adicionar(biblio[k - 1], hoje)
+                        print(
+                            f"{biblio[k - 1].exibicaoSimples()} adicionado à mochila com sucesso. Sua data de devolução é: {usuario_logado.mochilaDeLivros.calcularDevolucao(hoje)}")
+                    else:
+                        print("Índice fora do limite da bibliografia, verifique a síntaxe do comando e tente novamente.")
+            else:
+                print("Índice fora do limite do número de disciplinas, verifique a síntaxe do comando e tente novamente.")
+        elif opa == "n":
+            estado = "Cadastrando Livros 2"
+        elif opa == "c":
+            estado = "Menu"
+        else:
+            print("Comando não compreendido, cheque a síntaxe do comando.")
 
+def estado_mochila_opcoes():
+    global estado
+    hoje = mt.data_de_hoje()
+    taxa = usuario_logado.mochilaDeLivros.getMulta()
+    print("\nPara exibir informações mais detalhadas. Você pode:\nConsultar [Atrasos]\nConsultar Bibliografia ["
+          "Faltante]\nConsultar seus [Emprestimos]\n[Renovar] seus livros\n[Devolver] seus livros\n[Adicionar] um "
+          "livro à mochila\n[Reconfigurar] sua mochila.\n[Sair] para voltar ao menu principal.")
+    while True:
+        op = input().lower()
+        estado = "Menu"
+        if op == "atrasos":
+            usuario_logado.mochilaDeLivros.exibirAtrasos(hoje)
+        elif op == "faltante":
+            disciplinas = usuario_logado.getDisciplinas()
+            faltantes = []
+            print("Faltam os seguintes livros na sua mochila: ")
+            for i in range(len(disciplinas)):
+                faltantes.append(usuario_logado.mochilaDeLivros.cruzarBibliografia(disciplinas))
+            for i in range(len(faltantes)):
+                faltantes[i].exibicaoSimples(hoje)
+        elif op == "emprestimos":
+            usuario_logado.mochilaDeLivros.exibicao(hoje)
+        elif op == "renovar":
+            usuario_logado.mochilaDeLivros.exibicao(hoje)
+            i = int(input("Digite o índice do livro a ser renovado: "))
+            usuario_logado.mochilaDeLivros.renovar(i,hoje)
+        elif op == "devolver":
+            usuario_logado.mochilaDeLivros.exibicao(hoje)
+            i = (input("Digite o índice do livro a ser renovado. Preencha o índice com [tudo] para devolver todos "
+                          "os livros simultaneamente: "))
+            if i.lower() == "tudo":
+                usuario_logado.mochilaDeLivros.devolverTudo(hoje)
+            usuario_logado.mochilaDeLivros.devolverTudo(int(i),hoje)
+        elif op == "adicionar":
+            estado = "Adicionar Livro"
+        elif op == "reconfigurar":
+            estado = "Configurando Mochila"
+        else:
+            estado = "Mochila Opcoes"
+            print("Comando não compreendido, verifique a síntaxe dele. ")
+        if estado != "Mochila Opcoes":
+            break
 
-
-def estado_cadastrando_livros(disciplina: DisciplinaCurricular, emprestando: bool):
+def estado_cadastrando_livros(disciplina: DisciplinaCurricular):
     global estado
     global usuario_logado
     hoje = mt.data_de_hoje()
-    print("Informe os campos abaixo para registrar o novo livro. Preencha o nome com sair para encerrar o registro.")
+    print("Informe os campos abaixo para registrar o novo livro. Preencha o título com sair para encerrar o registro.")
     while True:
         titulo = input("Digite o título do livro: ")
+        if titulo.lower() == "sair":
+            estado = "Menu"
+            break
         autor = input("Autor do livro: ")
         edicao = int(input("Digite o número da edição do livro: "))
         if disciplina is None:
@@ -82,7 +167,7 @@ def estado_registrando():
         if not us.verificar_email(email):
             continue
         senha = input("Digite a senha da sua conta: ")
-        if not us.validarSenha(senha):
+        if not validarSenha(senha):
             continue
         curso = input("Digite o principal curso no qual você está estudando: ")
         r = us.registrar(nome,email,senha,curso)
@@ -122,7 +207,7 @@ def estado_fora():
 def estado_menu():
     global estado
     while True:
-        opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\n[Consultar Mochila] de Livros\n[Sugerir Estudos]\nBuscar [Parceiros de Estudos]\n[Consultar Situação] das notas de hoje.\n[Encerrar o dia]\n[adicionar disciplinas]\n[Configurações] da sua Conta\n")
+        opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\n[Consultar Mochila] de Livros\n[Sugerir Estudos]\nBuscar [Parceiros de Estudos]\n[Consultar Situação] das notas de hoje.\n[Encerrar o dia]\n[adicionar disciplinas]\n[Configurações] da sua Conta\nEfetuar [Logout]\n")
         match opcao.lower():
             case "hoje":
                 estado = "Hoje"
@@ -140,6 +225,11 @@ def estado_menu():
                 estado = "Configurando Conta"
             case "adicionar disciplinas":
                 estado = "Adicionando Disciplinas"
+            case _:
+                print("Comando não compreendido, cheque a síntaxe do comando e tente novamente.")
+        if estado != "Menu":
+            break
+
 
 def state_resolver():
     global estado
@@ -153,11 +243,15 @@ def state_resolver():
         estado_menu()
     elif estado == "Configurando Mochila":
         estado_configurando_mochila()
+    elif estado == "Mochila":
+        estado_mochila()
+    elif estado == "Mochila Opcoes":
+        estado_mochila_opcoes()
+    elif estado == "Cadastrando Livros 1":
+        estado_cadastrando_livros(estado_disciplina)
+    elif estado == "Cadastrando Livros 2":
+        estado_cadastrando_livros(None)
 
-
-
-            
-            
 
 def adicionar_disciplinas():
     print(type(usuario_logado))

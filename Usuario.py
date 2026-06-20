@@ -49,13 +49,28 @@ class Usuario():
     def getDisciplinas(self):
         return self.disciplinas
 
+    # Restrição de só uma prova por disciplina
     def provasHoje(self,dia:date):
         provasHoje = []
-        for i in range(len(self.disciplinas)):
-            disciplina = self.disciplinas[i]
-            if isinstance(disciplina,DisciplinaCurricular):
-                provas = disciplina.getProvas()
-                for j in range(len(provas)):
-                    if provas[j].getData == dia:
-                        provasHoje.append(disciplina)
+        dcs = self.getDisciplinasCurriculares()
+        for i in range(len(dcs)):
+            disciplina = dcs[i]
+            provas = disciplina.getProvas()
+            for j in range(len(provas)):
+                if provas[j].getData == dia:
+                    provasHoje.append(disciplina)
         return provasHoje
+
+    def getDisciplinasCurriculares(self) -> list[DisciplinaCurricular]:
+        dcs = []
+        disciplinas = self.disciplinas
+        for i in range(len(disciplinas)):
+            if isinstance(disciplinas[i], DisciplinaCurricular):
+                dcs.append(self.disciplinas[i])
+        return dcs
+
+    def exibirDisciplinasCurriculares(self):
+        dcs = self.getDisciplinasCurriculares()
+        for i in range(len(dcs)):
+            print(f"{i+1}. {dcs[i].get_nome()}")
+

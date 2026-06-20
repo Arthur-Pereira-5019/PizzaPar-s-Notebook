@@ -15,14 +15,33 @@ class MochilaDeLivros:
         self.configurada = True
 
     def devolver(self, indice: int, dia: date):
-        livro = self.livros[indice]
+        if indice < 1 or indice > len(self.livros):
+            print("Índice fora da lista de livros, cheque o seu comando.")
+            return
+        livro = self.livros[indice-1]
         ex = livro.exibicao_simples()
         multa = livro.calcularMulta(self.multa,dia)
-        self.livros.pop(indice)
+        self.livros.pop(indice-1)
         if multa > 0:
             print(f"{ex} devolvido com uma multa de {multa}R$.")
         else:
             print(f"{ex} devolvido sem multa.")
+        self.organizar(dia)
+
+    def renovar(self, indice: int, dia: date):
+        if indice < 0 or indice > len(self.livros):
+            print("Índice fora da lista de livros, cheque o seu comando.")
+            return
+        livro = self.livros[indice]
+        ex = livro.exibicao_simples()
+        multa = livro.calcularMulta(self.multa, dia)
+        if livro.gNRenovacoes() > self.renovacoes:
+            print("Este exemplar está no limite de renovações, impossível renovar.")
+            return
+        if multa > 0:
+            print(f"{ex} renovado com uma multa de {multa}R$.")
+        else:
+            print(f"{ex} renovado sem multa.")
         self.organizar(dia)
 
     def adicionar(self, livro: Livro, dia: date):
@@ -38,8 +57,9 @@ class MochilaDeLivros:
 
     def multaAcumulada(self, dia: date):
         multa = 0.0
-        for i in range (len(self.livros)):
-            multa += self.livros[i].calcularMulta(self.multa,dia)
+        livrosAtrasados = self.livrosAtrasados(dia)
+        for i in range (len(livrosAtrasados)):
+            multa += livrosAtrasados[i].calcularMulta(livrosAtrasados,dia)
         return multa
 
     def exibicao(self, dia: date):
@@ -66,7 +86,40 @@ class MochilaDeLivros:
                 faltantes.append(biblio)
         return faltantes
 
+    def calcularDevolucao(self, dia):
+        return timedelta(dia + self.tempo_emprestimo)
+
     def isConfigurada(self):
         return self.configurada
 
+    def livrosAtrasados(self, dia):
+        livrosAtrasados = []
+        for i in range (len(self.livros)):
+            if self.livros[i].em_atraso(dia):
+                livrosAtrasados.append(self.livros[i])
+        return livrosAtrasados
+
+    def exibirAtrasos(self, dia: date):
+        atrasados = self.livrosAtrasados(dia)
+        nAtrasados = len(atrasados)
+        for i in range(nAtrasados):
+            print(f"{i + 1}. {atrasados[i].exibicao}")
+        print("\n")
+
     def gerarResumo(self, dia):
+        devolverHoje = self.livrosADevolverHoje(dia)
+        nAtrasados = len(self.livrosAtrasados(dia))
+        nDevolver = len(self.livrosADevolverHoje(dia))
+
+        print(f"Você está com {len(self.livros)} em sua mochila")
+        if nAtrasados > 0:
+            multaAcumulada = self.multaAcumulada(dia)
+            print(f"Existem {nAtrasados} livros atrasados, gerando uma multa de: {multaAcumulada}R$.")
+        if nDevolver > 0:
+            print(f"{nDevolver} livros devem ser devolvidos hoje.")
+
+    def getLivros(self):
+        return self.livros
+
+    def getMulta(self):
+        return self.multa
