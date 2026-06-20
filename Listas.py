@@ -7,9 +7,9 @@ class Listas:
         self.feita = True
     
     def getFeita(self):
-        return(self.feita)
+        return self.feita
 
     def getData(self):
-        return(self.data)
+        return self.data
     
     

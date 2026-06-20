@@ -3,10 +3,9 @@ from UsuarioService import *
 from Disciplina import *
 from Livros import *
 from MochilaDeLivros import *
-from ModuloTempo import *
+import ModuloTempo as mt
 
 us = UsuarioService()
-mt = ModuloTempo()
 usuario_logado: Usuario = None
 estado_disciplina = None
 estado = "Fora"
@@ -29,6 +28,69 @@ def estado_hoje():
         print("Provas de hoje:")
         for i in range (disciplinas):
             print(f"Prova de {disciplinas[i].get_nome()} às {disciplinas[i].get_hora()}")
+
+def estado_configurando_conta():
+    global estado
+    print("Você pode mudar as seguintes configurações da sua conta:\nAlterar as suas [Aptidões]\nTrocar de [curso]\nTrocar de [Nome]\nTrocar [Privacidade] da conta\n[Sair]")
+    while True:
+        op = input().lower()
+        if op == "Aptidões":
+            napts = [False]*4
+            print("Para configurar as aptidões, responda com S para cada uma que você possui, qualquer outra entrada será interpretada como um Não.")
+            aptLinguagens = input("Linguagens: ")
+            aptMatematica = input("Matemática: ")
+            aptHumanas = input("Ciências Humanas e Sociais: ")
+            aptNaturezas = input("Ciências da Natureza: ")
+            if aptLinguagens == "S":
+                napts[0] = True
+            if aptMatematica == "S":
+                napts[1] = True
+            if aptHumanas == "S":
+                napts[2] = True
+            if aptNaturezas == "S":
+                napts[3] = True
+            usuario_logado.setAptidoes(napts)
+        elif op == "curso":
+            print("Prossiga com cautela, você pode perder dados relevantes das suas disciplinas:")
+            print("Você deseja trocar de curso e: \nRemover todas disciplinas [curriculares]\nRemover [todas disciplinas]\n[Revisar] disciplinas manualmente posteriormente\n[Sair].")
+            opd = ""
+            while True:
+                opd = input().lower()
+                if opd == "curriculares":
+                    usuario_logado.removerDisciplinasCurriculares()
+                    break
+                elif opd == "todas":
+                    usuario_logado.removerTodasDisciplinas()
+                    break
+                elif opd == "revisar" or opd == "sair":
+                    break
+                else:
+                    print("Comando não identificado, cheque a ortografia e tente novamente.")
+            if opd != "sair":
+                curso = input("Digite o nome do novo curso que você deseja entrar.")
+                usuario_logado.setCurso(curso)
+                print("Curso alterado com sucesso!")
+        elif op == "nome":
+            novo_nome = input("Digite seu novo nome de usuário: ")
+            usuario_logado.setNome(novo_nome)
+            print("Nome alterado com sucesso!")
+        elif op == "privacidade":
+            usuario_logado.switchPublicidade()
+            if usuario_logado.isPublica():
+                print("Sua conta agora é pública!")
+            else:
+                print("Sua conta agora é privada!")
+        elif op == "sair":
+            estado = "Menu"
+            break
+        else:
+            print("Comando não compreendido, cheque a ortografia e tente novamente.")
+
+
+
+
+
+
 
 def estado_configurando_mochila():
     global estado
@@ -90,15 +152,15 @@ def estado_adicionando_livro():
                         print(
                             f"{biblio[k - 1].exibicaoSimples()} adicionado à mochila com sucesso. Sua data de devolução é: {usuario_logado.mochilaDeLivros.calcularDevolucao(hoje)}")
                     else:
-                        print("Índice fora do limite da bibliografia, verifique a síntaxe do comando e tente novamente.")
+                        print("Índice fora do limite da bibliografia, verifique a ortografia do comando e tente novamente.")
             else:
-                print("Índice fora do limite do número de disciplinas, verifique a síntaxe do comando e tente novamente.")
+                print("Índice fora do limite do número de disciplinas, verifique a ortografia do comando e tente novamente.")
         elif opa == "n":
             estado = "Cadastrando Livros 2"
         elif opa == "c":
             estado = "Menu"
         else:
-            print("Comando não compreendido, cheque a síntaxe do comando.")
+            print("Comando não compreendido, cheque a ortografia do comando.")
 
 def estado_mochila_opcoes():
     global estado
@@ -139,7 +201,7 @@ def estado_mochila_opcoes():
             estado = "Configurando Mochila"
         else:
             estado = "Mochila Opcoes"
-            print("Comando não compreendido, verifique a síntaxe dele. ")
+            print("Comando não compreendido, verifique a ortografia dele. ")
         if estado != "Mochila Opcoes":
             break
 
@@ -242,7 +304,7 @@ def estado_menu():
                 print("Saindo...\n")
                 estado = "Fora"
             case _:
-                print("Comando não compreendido, cheque a síntaxe do comando e tente novamente.")
+                print("Comando não compreendido, cheque a ortografia do comando e tente novamente.")
         if estado != "Menu":
             break
 
@@ -272,6 +334,8 @@ def state_resolver():
         us.buscaParceiros(usuario_logado)
         print("")
         estado = "Menu"
+    elif estado == "Configurando Conta":
+        estado_configurando_conta()
 
 
 def adicionar_disciplinas():

@@ -60,5 +60,8 @@ class UsuarioService():
             if su.isPublica() and su.getCurso() == curso and su != usuario:
                 print(f"{c}. {su}")
                 c += 1
-        if(c == 1):
+        if c == 1:
             print("Nenhum usuário encontrado.")
+
+    def excluirConta(self, usuario: Usuario):
+        self.usuarios.remove(usuario)

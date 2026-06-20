@@ -19,16 +19,7 @@ class Usuario():
     def switchPublicidade(self):
         self.publica = not self.publica
         
-    def setAptidoes(self,linguagens,matematica,humanas,naturezas):
-        novasAptidoes = []
-        if(linguagens):
-            novasAptidoes.append("Linguagens")
-        if(matematica):
-            novasAptidoes.append("Matemática")
-        if(humanas):
-            novasAptidoes.append("Humanas")
-        if(naturezas):
-            novasAptidoes.append("Naturezas")
+    def setAptidoes(self,novasAptidoes):
         self.aptidoes = novasAptidoes
     
     def setSenha(self, senha: str):
@@ -51,6 +42,13 @@ class Usuario():
 
     def getDisciplinas(self):
         return self.disciplinas
+
+    def setCurso(self, curso: str):
+        self.curso = curso
+
+    def setNome(self, nome: str):
+        self.nome = nome
+
 
     # Restrição de só uma prova por disciplina
     def provasHoje(self,dia:date):
@@ -79,6 +77,22 @@ class Usuario():
 
     def getCurso(self):
         return self.curso
+
+    def aptidoesString(self):
+        return f"Aptidões"
+
+    def removerDisciplinasCurriculares(self):
+        dcs = self.getDisciplinasCurriculares()
+        ldcs = len(dcs)
+        for i in range(ldcs):
+            self.disciplinas.remove(dcs[i])
+        print(f"Removidas {ldcs} disciplinas curriculares com sucesso.")
+
+    def removerTodasDisciplinas(self):
+        lds = len(self.disciplinas)
+        self.disciplinas = []
+        print(f"Removidas {lds} disciplinas curriculares com sucesso.")
+
 
     def __str__(self):
         return f"{self.nome} - {self.email} ({self.curso})"

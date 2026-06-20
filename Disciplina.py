@@ -66,6 +66,12 @@ class DisciplinaCurricular(Disciplina):
 
     def getBibliografia(self):
         return self.bibliografia
-    
+
+    def nDisciplinasPreProva(self, prova: Provas):
+        n = 0
+        for i in range(len(self.listas)):
+            if not self.listas[i].getFeita() and self.listas[i].getData() < prova.getData():
+                n+=1
+        return n
     
         
