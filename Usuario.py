@@ -77,3 +77,11 @@ class Usuario():
         for i in range(len(dcs)):
             print(f"{i+1}. {dcs[i].get_nome()}")
 
+    def getCurso(self):
+        return self.curso
+
+    def __str__(self):
+        return f"{self.nome} - {self.email} ({self.curso})"
+
+    def __eq__(self, other):
+        return self.email == other.email

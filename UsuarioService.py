@@ -19,7 +19,7 @@ def validarSenha(senha):
 
 
 class UsuarioService():
-    usuarios = []
+    usuarios:list[Usuario] = []
     
     def login(self, email: str, senha: str):
         #global self.usuarios
@@ -51,4 +51,14 @@ class UsuarioService():
                 print("Usuário com este E-Mail já registrado, faça login ou cheque a ortografia do E-Mail")
                 return False
         return True
-    
+
+    def buscaParceiros(self,usuario: Usuario):
+        curso = usuario.getCurso()
+        c = 1
+        for i in range(len(self.usuarios)):
+            su = self.usuarios[i]
+            if su.isPublica() and su.getCurso() == curso and su != usuario:
+                print(f"{c}. {su}")
+                c += 1
+        if(c == 1):
+            print("Nenhum usuário encontrado.")

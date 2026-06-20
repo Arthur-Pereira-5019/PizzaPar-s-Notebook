@@ -260,12 +260,25 @@ def state_resolver():
         estado_cadastrando_livros(estado_disciplina)
     elif estado == "Cadastrando Livros 2":
         estado_cadastrando_livros(None)
+    elif estado == "Parceiros de Estudos":
+        print("Encontrando usuários que estudam no mesmo curso que você... ")
+        us.buscaParceiros(usuario_logado)
+        print("")
+        estado = "Menu"
 
 
 def adicionar_disciplinas():
     print(type(usuario_logado))
     
 us.registrar("Arthur","peneir20@gmail.com","abC..123","CC")
+us.registrar("Arthur1","peneir21@gmail.com","abC..123","CC")
+us.registrar("Arthur2","peneir22@gmail.com","abC..123","CC")
+us.registrar("Arthur3","peneir23@gmail.com","abC..123","Agronomia")
+us.registrar("Caio","cndelpizzo@gmail.com","abC..123","Agronomia")
+us.usuarios[0].switchPublicidade()
+us.usuarios[1].switchPublicidade()
+us.usuarios[3].switchPublicidade()
+us.usuarios[4].switchPublicidade()
 while True:
     print(estado)
     state_resolver()
