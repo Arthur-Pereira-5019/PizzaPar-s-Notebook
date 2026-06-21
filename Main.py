@@ -86,11 +86,15 @@ def estado_configurando_conta():
         else:
             print("Comando não compreendido, cheque a ortografia e tente novamente.")
 
+def estado_fim_do_dia():
+    print("Encerrando o dia...")
+    dl = input("O dia foi letivo? [S/N]")
+    disciplinas_hoje = usuario_logado.disciplinasDeHoje(mt.dia_da_semana())
+    while True:
+        if dl == "S":
 
-
-
-
-
+        elif dl == "N":
+            disciplinas_hoje.
 
 def estado_configurando_mochila():
     global estado

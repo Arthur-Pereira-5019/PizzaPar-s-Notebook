@@ -93,6 +93,16 @@ class Usuario():
         self.disciplinas = []
         print(f"Removidas {lds} disciplinas curriculares com sucesso.")
 
+    def disciplinasSugeridas(self,n: int,dia: date):
+        retorno = sorted(self.getDisciplinasCurriculares(), key=lambda d: (d.diasAteAProximaProva(dia), d.getMediaIndefinida(dia), d.isApto(self.aptidoes), d.getListasPreProximaProva(dia)))
+        return retorno[0:n-1]
+
+    def disciplinasDeHoje(self, dds):
+        retorno = []
+        for i in range(len(self.disciplinas)):
+            if self.disciplinas[i].dias.contains(dds):
+                retorno.append(self.disciplinas[i])
+        return retorno
 
     def __str__(self):
         return f"{self.nome} - {self.email} ({self.curso})"
