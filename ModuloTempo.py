@@ -11,6 +11,15 @@ def dia_da_semana():
 def exibir_dia_da_semana():
     return dias_da_semana[dia_da_semana()]
 
+def ano_e_bissexto():
+    if date.year % 400 == 0:
+        return True
+    else:
+        if date.year % 4 == 0 and not date.year % 100 == 0:
+            return True
+        else:
+            return False
+
 def exibir_data():
     hoje = data_de_hoje()
     return f"{hoje.day}/{hoje.month}/{hoje.year} ({exibir_dia_da_semana()})"

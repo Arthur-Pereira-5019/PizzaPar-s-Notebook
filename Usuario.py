@@ -37,7 +37,7 @@ class Usuario():
     def addDisciplinaEsportiva(self, nome, dias, duracao, hora, diasDisputa):
         self.disciplinas.append(DisciplinaEsportiva(nome, dias, duracao, hora, diasDisputa))
 
-    def addDisciplinaCurricular(self, nome, dias, duracao, hora, diasAtendimento):
+    def addDisciplinaCurricular(self, nome, dias, duracao, hora, diasAtendimento, aptidao):
         self.disciplinas.append(DisciplinaCurricular(nome, dias, duracao, hora, diasAtendimento))
 
     def getDisciplinas(self):
@@ -80,6 +80,8 @@ class Usuario():
 
     def aptidoesString(self):
         return f"Aptidões"
+
+
 
     def removerDisciplinasCurriculares(self):
         dcs = self.getDisciplinasCurriculares()

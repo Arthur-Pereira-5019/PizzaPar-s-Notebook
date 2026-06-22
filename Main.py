@@ -34,7 +34,7 @@ def estado_configurando_conta():
     print("Você pode mudar as seguintes configurações da sua conta:\nAlterar as suas [Aptidões]\nTrocar de [curso]\nTrocar de [Nome]\nTrocar [Privacidade] da conta\n[Sair]")
     while True:
         op = input().lower()
-        if op == "Aptidões":
+        if op == "aptidões":
             napts = [False]*4
             print("Para configurar as aptidões, responda com S para cada uma que você possui, qualquer outra entrada será interpretada como um Não.")
             aptLinguagens = input("Linguagens: ")
@@ -92,9 +92,10 @@ def estado_fim_do_dia():
     disciplinas_hoje = usuario_logado.disciplinasDeHoje(mt.dia_da_semana())
     while True:
         if dl == "S":
-
+            pass
         elif dl == "N":
-            disciplinas_hoje.
+            pass
+            #disciplinas_hoje.
 
 def estado_configurando_mochila():
     global estado
@@ -348,9 +349,135 @@ def adicionar_disciplinas():
     global estado
     tipo = input("[Curricular] ou [Esportiva]?")
     if tipo == "Curricular":
-        usuario_logado.addDisciplinaCurricular(input("Nome do Disciplina: "), input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n"), input("Duração da disciplina (em dias): "), input("Horario: "), input("Dias de Atendimento:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n"))
+        if usuario_logado.getAptidoes() != []:
+            nome = input("Nome do Disciplina: ")
+            dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
+            invalido = True
+            while invalido:
+                invalido = False
+                for i in dias:
+                    if i not in ['1', '2', '3', '4', '5']:
+                        invalido = True
+                        print("Data inválida, tente novamente")
+                        dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
+
+            duracao = str(input("Duração da disciplina (em dias): "))
+            print(type(duracao))
+            invalido = True
+            while invalido:
+                invalido = False
+                if not str(duracao).isnumeric():
+                    invalido = True
+                    print("Duração inválida, tente novamente")
+                    duracao = input("Duração da disciplina (em dias): ")
+
+
+            horario = input("Horario (HH:MM): ")
+            invalido = True
+            while invalido:
+                invalido = False
+                if horario.split(":")[0].isnumeric() and horario.split(":")[1].isnumeric():
+                    if len(horario.split(":")) != 2 or len(horario.split(":")[0]) != 2 or len(horario.split(":")[1]) != 2 or int(horario.split(":")[0]) >= 24 or int(horario.split(":")[1]) >= 60:
+                        invalido = True
+                        print("Horário inválido, tente novamente")
+                        horario = input("Horario: ")
+                else:
+                    invalido = True
+                    print("Horário inválido, tente novamente")
+                    horario = input("Horario: ")
+
+            atendimento = input("Dias de Atendimento:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n")
+            invalido = True
+            while invalido:
+                invalido = False
+                for i in dias:
+                    if i not in ['1', '2', '3', '4', '5']:
+                        invalido = True
+                        print("Data inválida, tente novamente")
+                        atendimento = input("Dias de Atendimento:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
+
+            horario = input("Horario (HH:MM): ")
+            invalido = True
+            while invalido:
+                invalido = False
+                if horario.split(":")[0].isnumeric() and horario.split(":")[1].isnumeric():
+                    if len(horario.split(":")) != 2 or len(horario.split(":")[0]) != 2 or len(
+                            horario.split(":")[1]) != 2 or int(horario.split(":")[0]) >= 24 or int(
+                            horario.split(":")[1]) >= 60:
+                        invalido = True
+                        print("Horário inválido, tente novamente")
+                        horario = input("Horario: ")
+                else:
+                    invalido = True
+                    print("Horário inválido, tente novamente")
+                    horario = input("Horario: ")
+
+            aptidao = input("Qual é a aptidao dessa disciplina?")
+            # invalido = True
+            # while invalido:
+            #     for i in usuario_logado.getAptidoes():
+            #         if aptidao == i:
+            #             break
+            #     aptidao = input("Esta aptidao não está no seu perfil, tente novamente: ")
+
+            usuario_logado.addDisciplinaCurricular(nome, dias, duracao, horario, atendimento, aptidao)
+        else:
+            print("Adicione aptidoes antes de adicionar disciplinas")
+
     if tipo == "Esportiva":
-        usuario_logado.addDisciplinaEsportiva(input("Nome do Disciplina: "), input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n"),input("Duração da disciplina (em dias): "), input("Horario: "), input("Dias de Disputa (DD/MM): "))
+        nome = input("Nome do Disciplina: ")
+        dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
+        invalido = True
+        while invalido:
+            invalido = False
+            for i in dias:
+                if i not in ['1', '2', '3', '4', '5']:
+                    invalido = True
+                    print("Data inválida, tente novamente")
+                    dias = input(
+                        "Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
+
+        duracao = str(input("Duração da disciplina (em dias): "))
+        print(type(duracao))
+        invalido = True
+        while invalido:
+            invalido = False
+            if not str(duracao).isnumeric():
+                invalido = True
+                print("Duração inválida, tente novamente")
+                duracao = input("Duração da disciplina (em dias): ")
+
+        horario = input("Horario (HH:MM): ")
+        invalido = True
+        while invalido:
+            invalido = False
+            if horario.split(":")[0].isnumeric() and horario.split(":")[1].isnumeric():
+                if len(horario.split(":")) != 2 or len(horario.split(":")[0]) != 2 or len(
+                        horario.split(":")[1]) != 2 or int(horario.split(":")[0]) >= 24 or int(
+                        horario.split(":")[1]) >= 60:
+                    invalido = True
+                    print("Horário inválido, tente novamente")
+                    horario = input("Horario: ")
+            else:
+                invalido = True
+                print("Horário inválido, tente novamente")
+                horario = input("Horario: ")
+        dias_de_disputa = input("Dias de Disputa (DD/MM): ")
+        invalido = True
+        while invalido:
+            invalido = False
+            if dias_de_disputa.split("/")[0].isnumeric() and dias_de_disputa.split("/")[1].isnumeric():
+                if len(dias_de_disputa.split("/")) != 2 or len(dias_de_disputa.split("/")[0]) != 2 or len(
+                        dias_de_disputa.split("/")[1]) != 2 or (int(dias_de_disputa.split("/")[0]) > 30 and int(dias_de_disputa.split("/")[1]) in [4, 6, 8, 10, 12]) or (int(dias_de_disputa.split("/")[0]) > 31 and int(dias_de_disputa.split("/")[1]) in [1, 3, 5, 7, 9, 11]) or (int(dias_de_disputa.split("/")[0]) > 28 and int(dias_de_disputa.split("/")[1]) in [2] and mt.ano_e_bissexto() == False) or (int(dias_de_disputa.split("/")[0]) > 29 and int(dias_de_disputa.split("/")[1]) == 2 and mt.ano_e_bissexto() == True)  or int(
+                        dias_de_disputa.split("/")[1]) > 12:
+                    invalido = True
+                    print("Dias inválidos, tente novamente")
+                    dias_de_disputa = input("Dias de Disputa (DD/MM): ")
+            else:
+                invalido = True
+                print("Dias inválidos, tente novamente")
+                dias_de_disputa = input("Dias de Disputa (DD/MM): ")
+        usuario_logado.addDisciplinaEsportiva(nome, dias, duracao, horario, dias_de_disputa)
 
     estado = "Menu"
     

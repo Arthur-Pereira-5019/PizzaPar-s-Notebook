@@ -37,6 +37,8 @@ class Disciplina:
 
 
 
+
+
 class DisciplinaEsportiva(Disciplina):
     def __init__(self, nome, dias, duracao, horaInicio, horaFim, diasDisputa):
         super().__init__(nome, dias, duracao, horaInicio, horaFim)
@@ -128,4 +130,3 @@ class DisciplinaCurricular(Disciplina):
     def isApto(self, aptidoes):
         return aptidoes[self.aptidao]
 
-        
