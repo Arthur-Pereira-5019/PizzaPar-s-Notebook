@@ -5,8 +5,10 @@ from Listas import Listas
 from Provas import Provas
 from Duvidas import Duvidas
 from datetime import date, timedelta
+import ModuloTempo as mt
 
 class Disciplina:
+    idContador = 0
     #Um item de hora início para cada dia da semana, representando o começo da aula naquele dia. Se for mais fácil fazer os cálculos de conflito, salva como int ou string ou sla oq lilbro
     def __init__(self, nome, dias, duracao, horaInicio: list[float], horaFim: list[float]):
         self.nome = nome
@@ -16,6 +18,8 @@ class Disciplina:
         self.horaFim = horaFim
         self.listaDePresenca = [False] * ((duracao // 7) * len(dias))
         self.marcadorPresenca = 0
+        self.id = Disciplina.idContador
+        Disciplina.idContador += 1
 
     def get_nome(self):
         return self.nome
@@ -36,17 +40,35 @@ class Disciplina:
         self.listaDePresenca[self.marcadorPresenca] = True
         self.marcadorPresenca += 1
 
-
-
+    def isConcluida(self):
+        return self.marcadorPresenca+1 == len(self.listaDePresenca)
 
 
 class DisciplinaEsportiva(Disciplina):
-    def __init__(self, nome, dias, duracao, horaInicio, horaFim, diasDisputa):
+    def __init__(self, nome, dias, duracao, horaInicio, horaFim, diasDisputa: list[date]):
         super().__init__(nome, dias, duracao, horaInicio, horaFim)
         self.diasDisputa = diasDisputa
         
     def getDiasDisputa(self):
-        return(self.diasDisputa)
+        return self.diasDisputa
+
+    def getProximasDisputas(self, dia):
+        disputas = self.diasDisputa
+        retorno = []
+        for i in range(len(disputas)):
+            if disputas[i] > dia:
+                retorno.append(disputas[i])
+        return retorno
+
+    def exibirDiasDisputa(self, dia):
+        disputas = self.getProximasDisputas(dia)
+        for i in range(len(disputas)):
+            print(f"{i+1}mt.exibir_data(disputas[i])")
+
+    def removerDisputaPeloIndice(self, indice: int, dia):
+        disputas = self.getProximasDisputas(dia)
+        self.diasDisputa.remove(disputas[indice])
+
     
 
 class DisciplinaCurricular(Disciplina):
@@ -155,8 +177,12 @@ class DisciplinaCurricular(Disciplina):
                 presencas += 1
         return presencas / ((len(self.listaDePresenca)) / 100)
 
-    def isConcluida(self):
-        return self.marcadorPresenca+1 == len(self.listaDePresenca)
+    def getNListasAFazer(self):
+        n = 0
+        for i in range (len(self.listas)):
+            if not self.listas[i].getFeita():
+                n += 1
+        return n
 
     def getMensagemAprovacao(self):
         if self.calcFrequenciaTotal() > 0.75:

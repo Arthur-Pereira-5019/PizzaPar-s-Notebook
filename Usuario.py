@@ -61,6 +61,17 @@ class Usuario():
                     provasHoje.append(disciplina)
         return provasHoje
 
+    def disputasHoje(self,dia:date):
+        disputasHoje = []
+        des = self.getDisciplinasEsportivas()
+        for i in range(len(des)):
+            disciplina = des[i]
+            disputas = disciplina.getDiasDisputa()
+            for j in range(len(disputas)):
+                if disputas[j] == dia:
+                    disputasHoje.append(disciplina)
+        return disputasHoje
+
     def getDisciplinasCurriculares(self) -> list[DisciplinaCurricular]:
         dcs = []
         disciplinas = self.disciplinas
@@ -69,18 +80,26 @@ class Usuario():
                 dcs.append(self.disciplinas[i])
         return dcs
 
+    def getDisciplinasEsportivas(self) -> list[DisciplinaEsportiva]:
+        des = []
+        disciplinas = self.disciplinas
+        for i in range(len(disciplinas)):
+            if isinstance(disciplinas[i], DisciplinaEsportiva):
+                des.append(self.disciplinas[i])
+        return des
+
     def exibirDisciplinasCurriculares(self):
         dcs = self.getDisciplinasCurriculares()
         for i in range(len(dcs)):
             print(f"{i+1}. {dcs[i].get_nome()}")
 
+    def exibirDisciplinasEsportivas(self):
+        des = self.getDisciplinasEsportivas()
+        for i in range(len(des)):
+            print(f"{i+1}. {des[i].get_nome()}")
+
     def getCurso(self):
         return self.curso
-
-    def aptidoesString(self):
-        return f"Aptidões"
-
-
 
     def removerDisciplinasCurriculares(self):
         dcs = self.getDisciplinasCurriculares()
@@ -93,6 +112,45 @@ class Usuario():
         lds = len(self.disciplinas)
         self.disciplinas = []
         print(f"Removidas {lds} disciplinas curriculares com sucesso.")
+
+    def removerDisciplinaCurricularPeloIndice(self, indice: int):
+        dcs = self.getDisciplinasCurriculares()
+        self.disciplinas.remove(dcs[indice])
+
+
+    def adicionaDisputas(self, indice, diaDisputa):
+        disciplinaRef = self.getDisciplinaEsportivaPeloIndice(indice)
+        disciplinaOriginal = self.encontraDisciplinaPeloId(disciplinaRef.id)
+        if disciplinaOriginal is not None:
+            #...
+            colisao = self.coincideDisputaComProva(diaDisputa)
+            if colisao != "":
+                print("Há uma colisão de eventos neste dia com uma {colisao}, se certifique de atender ao mais importante e se organizar com antecedência.")
+
+    def coincideEventoDisputa(self, dia):
+        if self.provasHoje(dia):
+            return "prova"
+        elif self.disputasHoje(dia):
+            return "outra disputa"
+        return ""
+
+    def getDisciplinaCurricularPeloIndice(self, indice):
+        dcs = self.getDisciplinasCurriculares()
+        return dcs[indice]
+
+    def getDisciplinaEsportivaPeloIndice(self, indice: int) -> DisciplinaEsportiva:
+        dcs = self.getDisciplinasEsportivas()
+        return dcs[indice]
+
+    def removerDisciplinaEsportivaPeloIndice(self, indice: int):
+        des = self.getDisciplinasEsportivas()
+        self.disciplinas.remove(des[indice])
+
+    def encontraDisciplinaPeloId(self, id):
+        for i in range(len(self.disciplinas)):
+            if self.disciplinas[i].id == id:
+                return self.disciplinas[i]
+        return None
 
     def disciplinasSugeridas(self,n: int,dia: date):
         retorno = sorted(self.getDisciplinasCurriculares(), key=lambda d: (d.diasAteAProximaProva(dia), d.getMediaIndefinida(dia), d.isApto(self.aptidoes), d.getListasPreProximaProva(dia)))
@@ -110,7 +168,7 @@ class Usuario():
 
     def getDisciplinasConcluidas(self, dia):
         retorno = []
-        dcs = self.getDisciplinasCurriculares()
+        dcs = self.disciplinas
         for i in range(len(dcs)):
             if dcs[i].isConcluida():
                 retorno.append(dcs[i])
@@ -138,6 +196,14 @@ class Usuario():
         if self.isPublica():
             return "Pública"
         return "Privada"
+
+    def getNListasAFazer(self):
+        dcs = self.getDisciplinasCurriculares()
+        total = 0
+        for i in range (len(dcs)):
+            total += dcs[i].getNListasAFazer()
+        return total
+
 
     def __str__(self):
         return f"{self.nome} - {self.email} ({self.curso} | Aptidões: {self.aptidoesToString()})"

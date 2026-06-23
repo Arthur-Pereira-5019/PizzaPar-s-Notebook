@@ -4,6 +4,7 @@ from Disciplina import *
 from Livros import *
 from MochilaDeLivros import *
 import ModuloTempo as mt
+import ModuloMenuDisciplinas as moduloMenuDisciplinas
 
 us = UsuarioService()
 usuario_logado: Usuario = None
@@ -11,9 +12,10 @@ estado_disciplina = None
 estado = "Menu"
 
 def estado_hoje():
+    global estado
     hoje = mt.data_de_hoje()
-    print(mt.exibir_dia_da_semana())
-    print("\n")
+    print(mt.exibir_data_hoje())
+    print("")
 
     livrosADevolver = usuario_logado.mochilaDeLivros.livrosADevolverHoje(hoje)
     if len(livrosADevolver) != 0:
@@ -28,17 +30,33 @@ def estado_hoje():
         print("Provas de hoje:")
         for i in range (provasHoje):
             print(f"Prova de {provasHoje[i].get_nome()} às {provasHoje[i].get_hora()}")
+    else:
+        print("Sem nenhuma prova hoje!")
+
     disciplinasConcluidas = usuario_logado.getDisciplinasConcluidas(hoje)
     if len(disciplinasConcluidas) != 0:
         print(f"{len(disciplinasConcluidas)} se encerraram hoje! Removeremos elas automaticamente para você. Aqui estão os resultados... ")
         for i in range(len(disciplinasConcluidas)):
             print(disciplinasConcluidas[i].getMensagemAprovacao())
+
+    disputasHoje = usuario_logado.disputasHoje(hoje)
+    if len(disputasHoje) > 0:
+        print("Você tem disputas hoje!")
+        for i in range(len(disputasHoje)):
+            print(f"{i+1} {disputasHoje[i].get_nome()}")
+    else:
+        print("Você não tem nenhuma disputa hoje!")
+
     aulasHoje = usuario_logado.disciplinasDeHoje(mt.dia_da_semana())
-    if len(aulasHoje > 0):
+    if len(aulasHoje) > 0:
         print("Hoje você tem as seguintes aulas: ")
+        for i in range(len(aulasHoje)):
+            print(f"{i+1} {aulasHoje[i].get_nome()}")
     else:
         print("Hoje você não tem nenhuma aula, aproveite o descanso para estudar mais!")
 
+    print(f"Você tem {usuario_logado.getNListasAFazer()} listas à fazer.")
+    estado = "Menu"
 
 def estado_configurando_conta():
     global estado
@@ -313,7 +331,7 @@ def estado_menu():
     while True:
         opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\nConsultar [Mochila] de Livros\n[Sugerir "
                       "Estudos]\nBuscar [Parceiros] de Estudos\n[Consultar Situação] das notas.\nEncerrar o "
-                      "[Dia]\n[Adicionar] disciplinas\n[Configuracoes] da sua Conta\nEfetuar [Logout]\n")
+                      "[Dia]\nConsultar seus registros para as disciplinas [esportivas]\nConsultar seus registros para as disciplinas [curriculares]\n[Configuracoes] da sua Conta\nEfetuar [Logout]\n")
         match opcao.lower():
             case "hoje":
                 estado = "Hoje"
@@ -329,8 +347,10 @@ def estado_menu():
                 estado = "Fim do Dia"
             case "configuracoes":
                 estado = "Configurando Conta"
-            case "adicionar":
-                estado = "Adicionando Disciplinas"
+            case "curriculares":
+                estado = "Consultando Curriculares"
+            case "esportivas":
+                estado = "Consultando Esportivas"
             case "logout":
                 print("Saindo...\n")
                 estado = "Fora"
@@ -340,160 +360,10 @@ def estado_menu():
             break
 
 
-def adicionar_disciplinas():
-    global estado
-    tipo = input("[Curricular] ou [Esportiva]?")
-    if tipo == "Curricular":
-        nome = input("Nome do Disciplina: ")
-        dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
-        invalido = True
-        while invalido:
-            invalido = False
-            for i in dias:
-                if i not in ['1', '2', '3', '4', '5']:
-                    invalido = True
-                    print("Data inválida, tente novamente")
-                    dias = input(
-                        "Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
-
-        duracao = str(input("Duração da disciplina (em dias): "))
-        print(type(duracao))
-        invalido = True
-        while invalido:
-            invalido = False
-            if not str(duracao).isnumeric():
-                invalido = True
-                print("Duração inválida, tente novamente")
-                duracao = input("Duração da disciplina (em dias): ")
-
-        horario = input("Horario (HH:MM): ")
-        invalido = True
-        while invalido:
-            invalido = False
-            if horario.split(":")[0].isnumeric() and horario.split(":")[1].isnumeric():
-                if len(horario.split(":")) != 2 or len(horario.split(":")[0]) != 2 or len(
-                        horario.split(":")[1]) != 2 or int(horario.split(":")[0]) >= 24 or int(
-                        horario.split(":")[1]) >= 60:
-                    invalido = True
-                    print("Horário inválido, tente novamente")
-                    horario = input("Horario: ")
-            else:
-                invalido = True
-                print("Horário inválido, tente novamente")
-                horario = input("Horario: ")
-
-        atendimento = input("Dias de Atendimento:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n")
-        invalido = True
-        while invalido:
-            invalido = False
-            for i in dias:
-                if i not in ['1', '2', '3', '4', '5']:
-                    invalido = True
-                    print("Data inválida, tente novamente")
-                    atendimento = input(
-                        "Dias de Atendimento:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
-
-        horario = input("Horario (HH:MM): ")
-        invalido = True
-        while invalido:
-            invalido = False
-            if horario.split(":")[0].isnumeric() and horario.split(":")[1].isnumeric():
-                if len(horario.split(":")) != 2 or len(horario.split(":")[0]) != 2 or len(
-                        horario.split(":")[1]) != 2 or int(horario.split(":")[0]) >= 24 or int(
-                    horario.split(":")[1]) >= 60:
-                    invalido = True
-                    print("Horário inválido, tente novamente")
-                    horario = input("Horario: ")
-            else:
-                invalido = True
-                print("Horário inválido, tente novamente")
-                horario = input("Horario: ")
-        ap_numero = 0
-        while True:
-            aptidao = input("Digite qual é a aptidao que melhor descreve essa disciplina? [Linguagens]/["
-                            "Matematica]/Ciências [Humanas] e Sociais/Ciências da [Natureza]")
-            aptidao = aptidao.lower()
-            if aptidao == "linguagens":
-                ap_numero = 0
-                break
-            elif aptidao == "matematica":
-                ap_numero = 1
-                break
-            elif aptidao == "humanas":
-                ap_numero = 2
-                break
-            elif aptidao == "natureza":
-                ap_numero = 3
-                break
-        estado_disciplina = usuario_logado.addDisciplinaCurricular(nome, dias, duracao, horaInicio, horaFim, ap_numero)
-        print("Disciplina registrada com sucesso! Agora vamos registrar a bibliografia dessa disciplina.")
-        estado = "Cadastrando Livros 1"
-    if tipo == "Esportiva":
-        nome = input("Nome do Disciplina: ")
-        dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
-        invalido = True
-        while invalido:
-            invalido = False
-            for i in dias:
-                if i not in ['1', '2', '3', '4', '5']:
-                    invalido = True
-                    print("Data inválida, tente novamente")
-                    dias = input(
-                        "Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
-
-        duracao = str(input("Duração da disciplina (em dias): "))
-        print(type(duracao))
-        invalido = True
-        while invalido:
-            invalido = False
-            if not str(duracao).isnumeric():
-                invalido = True
-                print("Duração inválida, tente novamente")
-                duracao = input("Duração da disciplina (em dias): ")
-
-        horario = input("Horario (HH:MM): ")
-        invalido = True
-        while invalido:
-            invalido = False
-            if horario.split(":")[0].isnumeric() and horario.split(":")[1].isnumeric():
-                if len(horario.split(":")) != 2 or len(horario.split(":")[0]) != 2 or len(
-                        horario.split(":")[1]) != 2 or int(horario.split(":")[0]) >= 24 or int(
-                    horario.split(":")[1]) >= 60:
-                    invalido = True
-                    print("Horário inválido, tente novamente")
-                    horario = input("Horario: ")
-            else:
-                invalido = True
-                print("Horário inválido, tente novamente")
-                horario = input("Horario: ")
-        dias_de_disputa = input("Dias de Disputa (DD/MM): ")
-        invalido = True
-        while invalido:
-            invalido = False
-            if dias_de_disputa.split("/")[0].isnumeric() and dias_de_disputa.split("/")[1].isnumeric():
-                if len(dias_de_disputa.split("/")) != 2 or len(dias_de_disputa.split("/")[0]) != 2 or len(
-                        dias_de_disputa.split("/")[1]) != 2 or (
-                        int(dias_de_disputa.split("/")[0]) > 30 and int(dias_de_disputa.split("/")[1]) in [4, 6, 8, 10,
-                                                                                                           12]) or (
-                        int(dias_de_disputa.split("/")[0]) > 31 and int(dias_de_disputa.split("/")[1]) in [1, 3, 5, 7,
-                                                                                                           9, 11]) or (
-                        int(dias_de_disputa.split("/")[0]) > 28 and int(dias_de_disputa.split("/")[1]) in [
-                    2] and mt.ano_e_bissexto() == False) or (int(dias_de_disputa.split("/")[0]) > 29 and int(
-                    dias_de_disputa.split("/")[1]) == 2 and mt.ano_e_bissexto() == True) or int(
-                    dias_de_disputa.split("/")[1]) > 12:
-                    invalido = True
-                    print("Dias inválidos, tente novamente")
-                    dias_de_disputa = input("Dias de Disputa (DD/MM): ")
-            else:
-                invalido = True
-                print("Dias inválidos, tente novamente")
-                dias_de_disputa = input("Dias de Disputa (DD/MM): ")
-        usuario_logado.addDisciplinaEsportiva(nome, dias, duracao, horaInicio, horaFim, dias_de_disputa)
-        estado = "Menu"
-
-
 def state_resolver():
     global estado
+    global usuario_logado
+    global estado_disciplina
     if estado == "Fora":
         estado_fora()
     elif estado == "Logando":
@@ -519,9 +389,16 @@ def state_resolver():
         estado = "Menu"
     elif estado == "Configurando Conta":
         estado_configurando_conta()
-    elif estado == "Adicionando Disciplinas":
-        adicionar_disciplinas()
-
+    elif estado == "Adicionando Disciplinas 1":
+        estado, usuario_logado, estado_disciplina = moduloMenuDisciplinas.adicionar_disciplinas_curriculares(usuario_logado)
+    elif estado == "Adicionando Disciplinas 2":
+        estado, usuario_logado = moduloMenuDisciplinas.adicionar_disciplinas_esportivas(usuario_logado)
+    elif estado == "Consultando Esportivas":
+        estado, usuario_logado = moduloMenuDisciplinas.estado_consultando_esportivas(usuario_logado)
+    elif estado == "Consultando Curriculares":
+        estado, usuario_logado = moduloMenuDisciplinas.estado_consultando_curriculares(usuario_logado)
+    elif estado == "Hoje":
+        estado_hoje()
 
 # Para fins de teste DO NOT SHIP
 us.registrar("Arthur","peneir20@gmail.com","abC..123","CC")

@@ -20,6 +20,9 @@ def ano_e_bissexto():
         else:
             return False
 
-def exibir_data():
+def exibir_data_hoje():
     hoje = data_de_hoje()
     return f"{hoje.day}/{hoje.month}/{hoje.year} ({exibir_dia_da_semana()})"
+
+def exibir_data(dia):
+    return f"{dia.day}/{dia.month}/{dia.year} ({exibir_dia_da_semana()})"
