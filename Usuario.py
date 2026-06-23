@@ -162,7 +162,7 @@ class Usuario():
     def disciplinasDeHoje(self, dds):
         retorno = []
         for i in range(len(self.disciplinas)):
-            if self.disciplinas[i].dias.contains(dds):
+            if dds in self.disciplinas[i].dias:
                 retorno.append(self.disciplinas[i])
         return retorno
 
@@ -204,6 +204,10 @@ class Usuario():
             total += dcs[i].getNListasAFazer()
         return total
 
+    def marcarPresencaPeloId(self, id: int, presenca: bool):
+        for i in range(len(self.disciplinas)):
+            if self.disciplinas[i].id == id:
+                self.disciplinas[i].marcarPresenca(presenca)
 
     def __str__(self):
         return f"{self.nome} - {self.email} ({self.curso} | Aptidões: {self.aptidoesToString()})"

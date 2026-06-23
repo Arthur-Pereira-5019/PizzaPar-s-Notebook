@@ -17,6 +17,8 @@ def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
                 print("Data inválida, tente novamente")
                 dias = input(
                     "Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
+    for j in range(len(dias)):
+        dias[j] = int(dias[j]) - 1
 
     duracao = str(input("Duração da disciplina (em dias): "))
     print(type(duracao))
@@ -94,6 +96,7 @@ def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
 
 def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
     nome = input("Nome da Disciplina: ")
+    print("Digite a lista de dias de disciplina, separados por espaços em branco.")
     dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
     invalido = True
     while invalido:
@@ -104,6 +107,8 @@ def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
                 print("Data inválida, tente novamente")
                 dias = input(
                     "Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
+    for j in range(len(dias)):
+        dias[j] = int(dias[j])-1
 
     duracao = str(input("Duração da disciplina (em dias): "))
     print(type(duracao))

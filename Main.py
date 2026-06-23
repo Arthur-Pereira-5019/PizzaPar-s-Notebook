@@ -29,7 +29,7 @@ def estado_hoje():
     if len(provasHoje) != 0:
         print("Provas de hoje:")
         for i in range (provasHoje):
-            print(f"Prova de {provasHoje[i].get_nome()} às {provasHoje[i].get_hora()}")
+            print(f"Prova de {provasHoje[i].get_nome()} às {provasHoje[i].getHoraInicioHoje(mt.dia_da_semana())}")
     else:
         print("Sem nenhuma prova hoje!")
 
@@ -43,7 +43,7 @@ def estado_hoje():
     if len(disputasHoje) > 0:
         print("Você tem disputas hoje!")
         for i in range(len(disputasHoje)):
-            print(f"{i+1} {disputasHoje[i].get_nome()}")
+            print(f"{i+1}. {disputasHoje[i].get_nome()}")
     else:
         print("Você não tem nenhuma disputa hoje!")
 
@@ -51,7 +51,7 @@ def estado_hoje():
     if len(aulasHoje) > 0:
         print("Hoje você tem as seguintes aulas: ")
         for i in range(len(aulasHoje)):
-            print(f"{i+1} {aulasHoje[i].get_nome()}")
+            print(f"{i+1}. {aulasHoje[i].get_nome()} às {aulasHoje[i].getHoraInicioHoje(mt.dia_da_semana())}")
     else:
         print("Hoje você não tem nenhuma aula, aproveite o descanso para estudar mais!")
 
@@ -130,15 +130,30 @@ def estado_configurando_conta():
             print("Comando não compreendido, cheque a ortografia e tente novamente.")
 
 def estado_fim_do_dia():
+    global estado
     print("Encerrando o dia...")
-    dl = input("O dia foi letivo? [S/N]")
+    print("O dia foi letivo? [S/N]")
     disciplinas_hoje = usuario_logado.disciplinasDeHoje(mt.dia_da_semana())
     while True:
+        dl = input()
         if dl == "S":
-            pass
+            print("Marque S para as disciplinas que você esteve presente, qualquer outra entrada será entendida como ausência.")
+            for i in range(len(disciplinas_hoje)):
+                p = input(f"{disciplinas_hoje[i].get_nome()}: ")
+                if p == "S":
+                    usuario_logado.marcarPresencaPeloId(disciplinas_hoje[i].id,True)
+                else:
+                    usuario_logado.marcarPresencaPeloId(disciplinas_hoje[i].id,False)
+            break
         elif dl == "N":
-            pass
-            #disciplinas_hoje.
+            print("Marcando presença para todas disciplinas de hoje, bom descanso.")
+            for i in range(len(disciplinas_hoje)):
+                usuario_logado.marcarPresencaPeloId(disciplinas_hoje[i].id, True)
+            break
+        else:
+            print("Comando não compreendido, cheque a ortografia e tente novamente.")
+    mt.proximo()
+    estado = "Menu"
 
 def estado_configurando_mochila():
     global estado
@@ -399,6 +414,8 @@ def state_resolver():
         estado, usuario_logado = moduloMenuDisciplinas.estado_consultando_curriculares(usuario_logado)
     elif estado == "Hoje":
         estado_hoje()
+    elif estado == "Fim do Dia":
+        estado_fim_do_dia()
 
 # Para fins de teste DO NOT SHIP
 us.registrar("Arthur","peneir20@gmail.com","abC..123","CC")
@@ -410,6 +427,8 @@ us.usuarios[0].switchPublicidade()
 us.usuarios[1].switchPublicidade()
 us.usuarios[3].switchPublicidade()
 us.usuarios[4].switchPublicidade()
+us.usuarios[0].addDisciplinaCurricular("Português",[0,1,3],100,[10,9,8],[12,14,10],0)
+us.usuarios[0].addDisciplinaCurricular("Matemática",[2,4,3],100,[8,9,14],[10,14,16],1)
 usuario_logado = us.usuarios[0]
 estado = "Menu"
 while True:

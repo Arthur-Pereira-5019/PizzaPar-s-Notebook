@@ -10,7 +10,7 @@ import ModuloTempo as mt
 class Disciplina:
     idContador = 0
     #Um item de hora início para cada dia da semana, representando o começo da aula naquele dia. Se for mais fácil fazer os cálculos de conflito, salva como int ou string ou sla oq lilbro
-    def __init__(self, nome, dias, duracao, horaInicio: list[float], horaFim: list[float]):
+    def __init__(self, nome, dias: list[int], duracao, horaInicio: list[float], horaFim: list[float]):
         self.nome = nome
         self.dias = dias
         self.duracao = duracao
@@ -29,20 +29,29 @@ class Disciplina:
     
     def get_duracao(self):
         return self.duracao
-    
-    def get_horaInicio(self):
+
+    def getHoraHoje(self):
         return self.horaInicio
 
-    def get_hora(self):
-        return self.horaFim
+    def getHoraFim(self):
+        return self.horaInicio
 
-    def marcarPresenca(self):
-        self.listaDePresenca[self.marcadorPresenca] = True
+    def getHoraFimHoje(self, dds):
+        return self.horaFim[self.dias.index(dds)]
+
+    def getHoraInicioHoje(self, dds):
+        return self.horaInicio[self.dias.index(dds)]
+
+    def marcarPresenca(self, presenca: bool):
+        self.listaDePresenca[self.marcadorPresenca] = presenca
         self.marcadorPresenca += 1
+
 
     def isConcluida(self):
         return self.marcadorPresenca+1 == len(self.listaDePresenca)
 
+    def __eq__(self, other):
+        return self.id == other.id
 
 class DisciplinaEsportiva(Disciplina):
     def __init__(self, nome, dias, duracao, horaInicio, horaFim, diasDisputa: list[date]):
