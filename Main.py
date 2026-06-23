@@ -47,7 +47,7 @@ def estado_configurando_conta():
         print(f"Conta: {usuario_logado.publicidadeToString()}")
         print(f"Curso: {usuario_logado.getCurso()}")
         print(f"Aptidões: {usuario_logado.aptidoesToString()}")
-        print("Você pode mudar as seguintes configurações da sua conta:\nAlterar as suas [Aptidoes]\nTrocar de [curso]\nTrocar de [Nome]\nTrocar [Privacidade] da conta\n[Sair]")
+        print("Você pode mudar as seguintes configurações da sua conta:\nAlterar as suas [Aptidoes]\nTrocar de [curso]\nTrocar de [Nome]\nTrocar [Privacidade] da conta\n[Excluir] sua conta\n[Sair]")
         op = input().lower()
         if op == "aptidoes":
             napts = [False]*4
@@ -91,10 +91,14 @@ def estado_configurando_conta():
             usuario_logado.setNome(novo_nome)
             print("Nome alterado com sucesso!")
         elif op == "excluir":
-            print("Você tem certeza que deseja fazer isso? Essa operação é irreversível!")
-            us.excluirConta(usuario_logado)
-            estado = "Fora"
-            break
+            prosseguir = input("Você tem certeza que deseja fazer isso? Essa operação é irreversível! [S/N]")
+            if prosseguir == "S":
+                us.excluirConta(usuario_logado)
+                print("Conta excluída com sucesso!")
+                estado = "Fora"
+                break
+            else:
+                continue
         elif op == "privacidade":
             usuario_logado.switchPublicidade()
             if usuario_logado.isPublica():
@@ -280,6 +284,7 @@ def estado_login():
     while True:
         email = input("Digite o email da sua conta: ")
         if email.lower() == "sair":
+            estado = "Menu"
             break
         senha = input("Digite a senha da sua conta: ")
         r = us.login(email,senha)
