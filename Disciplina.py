@@ -7,13 +7,14 @@ from Duvidas import Duvidas
 from datetime import date, timedelta
 
 class Disciplina:
-    def __init__(self, nome, dias, duracao, horaInicio, horaFim):
+    #Um item de hora início para cada dia da semana, representando o começo da aula naquele dia. Se for mais fácil fazer os cálculos de conflito, salva como int ou string ou sla oq lilbro
+    def __init__(self, nome, dias, duracao, horaInicio: list[float], horaFim: list[float]):
         self.nome = nome
         self.dias = dias
         self.duracao = duracao
         self.horaInicio = horaInicio
         self.horaFim = horaFim
-        self.presenca = [False]*((duracao//7)*len(dias))
+        self.listaDePresenca = [False] * ((duracao // 7) * len(dias))
         self.marcadorPresenca = 0
 
     def get_nome(self):
@@ -32,7 +33,7 @@ class Disciplina:
         return self.horaFim
 
     def marcarPresenca(self):
-        self.presenca[self.marcadorPresenca] = True
+        self.listaDePresenca[self.marcadorPresenca] = True
         self.marcadorPresenca += 1
 
 
@@ -127,6 +128,40 @@ class DisciplinaCurricular(Disciplina):
             media += provasAnteriores[i].getNota()
         return media/nProvas
 
+    def getMediaDefinida(self):
+        media = 0
+        nProvas = len(self.provas)
+        if nProvas == 0:
+            return 10
+
+        for i in range(nProvas):
+            media += self.provas[i].getNota()
+        return media / nProvas
+
     def isApto(self, aptidoes):
         return aptidoes[self.aptidao]
+
+    def calcFrequenciaParcial(self):
+        presencas = 0
+        for i in range (self.marcadorPresenca+1):
+            if self.listaDePresenca[i]:
+                presencas += 1
+        return presencas / ((self.marcadorPresenca+1) / 100)
+
+    def calcFrequenciaTotal(self):
+        presencas = 0
+        for i in range(len(self.listaDePresenca)):
+            if self.listaDePresenca[i]:
+                presencas += 1
+        return presencas / ((len(self.listaDePresenca)) / 100)
+
+    def isConcluida(self):
+        return self.marcadorPresenca+1 == len(self.listaDePresenca)
+
+    def getMensagemAprovacao(self):
+        if self.calcFrequenciaTotal() > 0.75:
+            if self.getMediaDefinida() > 6.0:
+                return f"Parabéns, você foi aprovado em {self.nome} com média {self.getMediaDefinida()}"
+            return f"Infelizmente você não obteve aprovação em {self.nome}, sua média final atingida foi: {self.getMediaDefinida()}"
+        return f"Infelizmente você não obteve aprovação em {self.nome} por motivos de frequência insuficiente."
 

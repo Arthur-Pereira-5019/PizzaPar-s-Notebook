@@ -8,7 +8,7 @@ import ModuloTempo as mt
 us = UsuarioService()
 usuario_logado: Usuario = None
 estado_disciplina = None
-estado = "Fora"
+estado = "Menu"
 
 def estado_hoje():
     hoje = mt.data_de_hoje()
@@ -23,18 +23,33 @@ def estado_hoje():
         print("\n")
     else:
         print("Sem livros à devolver hoje. \n")
-    disciplinas = usuario_logado.provasHoje(hoje)
-    if len(disciplinas) != 0:
+    provasHoje = usuario_logado.provasHoje(hoje)
+    if len(provasHoje) != 0:
         print("Provas de hoje:")
-        for i in range (disciplinas):
-            print(f"Prova de {disciplinas[i].get_nome()} às {disciplinas[i].get_hora()}")
+        for i in range (provasHoje):
+            print(f"Prova de {provasHoje[i].get_nome()} às {provasHoje[i].get_hora()}")
+    disciplinasConcluidas = usuario_logado.getDisciplinasConcluidas(hoje)
+    if len(disciplinasConcluidas) != 0:
+        print(f"{len(disciplinasConcluidas)} se encerraram hoje! Removeremos elas automaticamente para você. Aqui estão os resultados... ")
+        for i in range(len(disciplinasConcluidas)):
+            print(disciplinasConcluidas[i].getMensagemAprovacao())
+    aulasHoje = usuario_logado.disciplinasDeHoje(mt.dia_da_semana())
+    if len(aulasHoje > 0):
+        print("Hoje você tem as seguintes aulas: ")
+    else:
+        print("Hoje você não tem nenhuma aula, aproveite o descanso para estudar mais!")
+
 
 def estado_configurando_conta():
     global estado
-    print("Você pode mudar as seguintes configurações da sua conta:\nAlterar as suas [Aptidões]\nTrocar de [curso]\nTrocar de [Nome]\nTrocar [Privacidade] da conta\n[Sair]")
     while True:
+        print(f"Nome: {usuario_logado.nome}")
+        print(f"Conta: {usuario_logado.publicidadeToString()}")
+        print(f"Curso: {usuario_logado.getCurso()}")
+        print(f"Aptidões: {usuario_logado.aptidoesToString()}")
+        print("Você pode mudar as seguintes configurações da sua conta:\nAlterar as suas [Aptidoes]\nTrocar de [curso]\nTrocar de [Nome]\nTrocar [Privacidade] da conta\n[Sair]")
         op = input().lower()
-        if op == "aptidões":
+        if op == "aptidoes":
             napts = [False]*4
             print("Para configurar as aptidões, responda com S para cada uma que você possui, qualquer outra entrada será interpretada como um Não.")
             aptLinguagens = input("Linguagens: ")
@@ -50,9 +65,10 @@ def estado_configurando_conta():
             if aptNaturezas == "S":
                 napts[3] = True
             usuario_logado.setAptidoes(napts)
+            print("Aptidões atualizadas com sucesso!")
         elif op == "curso":
             print("Prossiga com cautela, você pode perder dados relevantes das suas disciplinas:")
-            print("Você deseja trocar de curso e: \nRemover todas disciplinas [curriculares]\nRemover [todas disciplinas]\n[Revisar] disciplinas manualmente posteriormente\n[Sair].")
+            print("Você deseja trocar de curso e: \nRemover todas disciplinas [curriculares]\nRemover [todas] disciplinas\n[Revisar] disciplinas manualmente posteriormente\n[Sair].")
             opd = ""
             while True:
                 opd = input().lower()
@@ -67,13 +83,18 @@ def estado_configurando_conta():
                 else:
                     print("Comando não identificado, cheque a ortografia e tente novamente.")
             if opd != "sair":
-                curso = input("Digite o nome do novo curso que você deseja entrar.")
+                curso = input("Digite o nome do novo curso que você deseja entrar: ")
                 usuario_logado.setCurso(curso)
                 print("Curso alterado com sucesso!")
         elif op == "nome":
             novo_nome = input("Digite seu novo nome de usuário: ")
             usuario_logado.setNome(novo_nome)
             print("Nome alterado com sucesso!")
+        elif op == "excluir":
+            print("Você tem certeza que deseja fazer isso? Essa operação é irreversível!")
+            us.excluirConta(usuario_logado)
+            estado = "Fora"
+            break
         elif op == "privacidade":
             usuario_logado.switchPublicidade()
             if usuario_logado.isPublica():
@@ -287,7 +308,7 @@ def estado_menu():
     while True:
         opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\nConsultar [Mochila] de Livros\n[Sugerir "
                       "Estudos]\nBuscar [Parceiros] de Estudos\n[Consultar Situação] das notas.\nEncerrar o "
-                      "[Dia]\n[Adicionar] disciplinas\n[Configurações] da sua Conta\nEfetuar [Logout]\n")
+                      "[Dia]\n[Adicionar] disciplinas\n[Configuracoes] da sua Conta\nEfetuar [Logout]\n")
         match opcao.lower():
             case "hoje":
                 estado = "Hoje"
@@ -301,7 +322,7 @@ def estado_menu():
                 estado = "Situacao Academica"
             case "dia":
                 estado = "Fim do Dia"
-            case "configurações":
+            case "configuracoes":
                 estado = "Configurando Conta"
             case "adicionar":
                 estado = "Adicionando Disciplinas"
@@ -314,117 +335,10 @@ def estado_menu():
             break
 
 
-def state_resolver():
-    global estado
-    if estado == "Fora":
-        estado_fora()
-    elif estado == "Logando":
-        estado_login()
-    elif estado == "Registrando":
-        estado_registrando()
-    elif estado == "Menu":
-        estado_menu()
-    elif estado == "Configurando Mochila":
-        estado_configurando_mochila()
-    elif estado == "Mochila":
-        estado_mochila()
-    elif estado == "Mochila Opcoes":
-        estado_mochila_opcoes()
-    elif estado == "Cadastrando Livros 1":
-        estado_cadastrando_livros(estado_disciplina)
-    elif estado == "Cadastrando Livros 2":
-        estado_cadastrando_livros(None)
-    elif estado == "Parceiros de Estudos":
-        print("Encontrando usuários que estudam no mesmo curso que você... ")
-        us.buscaParceiros(usuario_logado)
-        print("")
-        estado = "Menu"
-    elif estado == "Configurando Conta":
-        estado_configurando_conta()
-    elif estado == "Adicionando Disciplinas":
-        adicionar_disciplinas()
-
-
 def adicionar_disciplinas():
     global estado
     tipo = input("[Curricular] ou [Esportiva]?")
     if tipo == "Curricular":
-        if usuario_logado.getAptidoes() != []:
-            nome = input("Nome do Disciplina: ")
-            dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
-            invalido = True
-            while invalido:
-                invalido = False
-                for i in dias:
-                    if i not in ['1', '2', '3', '4', '5']:
-                        invalido = True
-                        print("Data inválida, tente novamente")
-                        dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
-
-            duracao = str(input("Duração da disciplina (em dias): "))
-            print(type(duracao))
-            invalido = True
-            while invalido:
-                invalido = False
-                if not str(duracao).isnumeric():
-                    invalido = True
-                    print("Duração inválida, tente novamente")
-                    duracao = input("Duração da disciplina (em dias): ")
-
-
-            horario = input("Horario (HH:MM): ")
-            invalido = True
-            while invalido:
-                invalido = False
-                if horario.split(":")[0].isnumeric() and horario.split(":")[1].isnumeric():
-                    if len(horario.split(":")) != 2 or len(horario.split(":")[0]) != 2 or len(horario.split(":")[1]) != 2 or int(horario.split(":")[0]) >= 24 or int(horario.split(":")[1]) >= 60:
-                        invalido = True
-                        print("Horário inválido, tente novamente")
-                        horario = input("Horario: ")
-                else:
-                    invalido = True
-                    print("Horário inválido, tente novamente")
-                    horario = input("Horario: ")
-
-            atendimento = input("Dias de Atendimento:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n")
-            invalido = True
-            while invalido:
-                invalido = False
-                for i in dias:
-                    if i not in ['1', '2', '3', '4', '5']:
-                        invalido = True
-                        print("Data inválida, tente novamente")
-                        atendimento = input("Dias de Atendimento:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
-
-            horario = input("Horario (HH:MM): ")
-            invalido = True
-            while invalido:
-                invalido = False
-                if horario.split(":")[0].isnumeric() and horario.split(":")[1].isnumeric():
-                    if len(horario.split(":")) != 2 or len(horario.split(":")[0]) != 2 or len(
-                            horario.split(":")[1]) != 2 or int(horario.split(":")[0]) >= 24 or int(
-                            horario.split(":")[1]) >= 60:
-                        invalido = True
-                        print("Horário inválido, tente novamente")
-                        horario = input("Horario: ")
-                else:
-                    invalido = True
-                    print("Horário inválido, tente novamente")
-                    horario = input("Horario: ")
-
-            aptidao = input("Qual é a aptidao dessa disciplina?")
-            # invalido = True
-            # while invalido:
-            #     for i in usuario_logado.getAptidoes():
-            #         if aptidao == i:
-            #             break
-            #     aptidao = input("Esta aptidao não está no seu perfil, tente novamente: ")
-
-            usuario_logado.addDisciplinaCurricular(nome, dias, duracao, horario, atendimento, aptidao)
-        else:
-            print("Adicione aptidoes antes de adicionar disciplinas")
-
-    if tipo == "Esportiva":
         nome = input("Nome do Disciplina: ")
         dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
         invalido = True
@@ -462,14 +376,106 @@ def adicionar_disciplinas():
                 invalido = True
                 print("Horário inválido, tente novamente")
                 horario = input("Horario: ")
+
+        atendimento = input("Dias de Atendimento:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n")
+        invalido = True
+        while invalido:
+            invalido = False
+            for i in dias:
+                if i not in ['1', '2', '3', '4', '5']:
+                    invalido = True
+                    print("Data inválida, tente novamente")
+                    atendimento = input(
+                        "Dias de Atendimento:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
+
+        horario = input("Horario (HH:MM): ")
+        invalido = True
+        while invalido:
+            invalido = False
+            if horario.split(":")[0].isnumeric() and horario.split(":")[1].isnumeric():
+                if len(horario.split(":")) != 2 or len(horario.split(":")[0]) != 2 or len(
+                        horario.split(":")[1]) != 2 or int(horario.split(":")[0]) >= 24 or int(
+                    horario.split(":")[1]) >= 60:
+                    invalido = True
+                    print("Horário inválido, tente novamente")
+                    horario = input("Horario: ")
+            else:
+                invalido = True
+                print("Horário inválido, tente novamente")
+                horario = input("Horario: ")
+        ap_numero = 0
+        while True:
+            aptidao = input("Digite qual é a aptidao que melhor descreve essa disciplina? [Linguagens]/["
+                            "Matematica]/Ciências [Humanas] e Sociais/Ciências da [Natureza]")
+            aptidao = aptidao.lower()
+            if aptidao == "linguagens":
+                ap_numero = 0
+                break
+            elif aptidao == "matematica":
+                ap_numero = 1
+                break
+            elif aptidao == "humanas":
+                ap_numero = 2
+                break
+            elif aptidao == "natureza":
+                ap_numero = 3
+                break
+        estado_disciplina = usuario_logado.addDisciplinaCurricular(nome, dias, duracao, horaInicio, horaFim, ap_numero)
+        print("Disciplina registrada com sucesso! Agora vamos registrar a bibliografia dessa disciplina.")
+        estado = "Cadastrando Livros 1"
+    if tipo == "Esportiva":
+        nome = input("Nome do Disciplina: ")
+        dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
+        invalido = True
+        while invalido:
+            invalido = False
+            for i in dias:
+                if i not in ['1', '2', '3', '4', '5']:
+                    invalido = True
+                    print("Data inválida, tente novamente")
+                    dias = input(
+                        "Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
+
+        duracao = str(input("Duração da disciplina (em dias): "))
+        print(type(duracao))
+        invalido = True
+        while invalido:
+            invalido = False
+            if not str(duracao).isnumeric():
+                invalido = True
+                print("Duração inválida, tente novamente")
+                duracao = input("Duração da disciplina (em dias): ")
+
+        horario = input("Horario (HH:MM): ")
+        invalido = True
+        while invalido:
+            invalido = False
+            if horario.split(":")[0].isnumeric() and horario.split(":")[1].isnumeric():
+                if len(horario.split(":")) != 2 or len(horario.split(":")[0]) != 2 or len(
+                        horario.split(":")[1]) != 2 or int(horario.split(":")[0]) >= 24 or int(
+                    horario.split(":")[1]) >= 60:
+                    invalido = True
+                    print("Horário inválido, tente novamente")
+                    horario = input("Horario: ")
+            else:
+                invalido = True
+                print("Horário inválido, tente novamente")
+                horario = input("Horario: ")
         dias_de_disputa = input("Dias de Disputa (DD/MM): ")
         invalido = True
         while invalido:
             invalido = False
             if dias_de_disputa.split("/")[0].isnumeric() and dias_de_disputa.split("/")[1].isnumeric():
                 if len(dias_de_disputa.split("/")) != 2 or len(dias_de_disputa.split("/")[0]) != 2 or len(
-                        dias_de_disputa.split("/")[1]) != 2 or (int(dias_de_disputa.split("/")[0]) > 30 and int(dias_de_disputa.split("/")[1]) in [4, 6, 8, 10, 12]) or (int(dias_de_disputa.split("/")[0]) > 31 and int(dias_de_disputa.split("/")[1]) in [1, 3, 5, 7, 9, 11]) or (int(dias_de_disputa.split("/")[0]) > 28 and int(dias_de_disputa.split("/")[1]) in [2] and mt.ano_e_bissexto() == False) or (int(dias_de_disputa.split("/")[0]) > 29 and int(dias_de_disputa.split("/")[1]) == 2 and mt.ano_e_bissexto() == True)  or int(
-                        dias_de_disputa.split("/")[1]) > 12:
+                        dias_de_disputa.split("/")[1]) != 2 or (
+                        int(dias_de_disputa.split("/")[0]) > 30 and int(dias_de_disputa.split("/")[1]) in [4, 6, 8, 10,
+                                                                                                           12]) or (
+                        int(dias_de_disputa.split("/")[0]) > 31 and int(dias_de_disputa.split("/")[1]) in [1, 3, 5, 7,
+                                                                                                           9, 11]) or (
+                        int(dias_de_disputa.split("/")[0]) > 28 and int(dias_de_disputa.split("/")[1]) in [
+                    2] and mt.ano_e_bissexto() == False) or (int(dias_de_disputa.split("/")[0]) > 29 and int(
+                    dias_de_disputa.split("/")[1]) == 2 and mt.ano_e_bissexto() == True) or int(
+                    dias_de_disputa.split("/")[1]) > 12:
                     invalido = True
                     print("Dias inválidos, tente novamente")
                     dias_de_disputa = input("Dias de Disputa (DD/MM): ")
@@ -477,10 +483,42 @@ def adicionar_disciplinas():
                 invalido = True
                 print("Dias inválidos, tente novamente")
                 dias_de_disputa = input("Dias de Disputa (DD/MM): ")
-        usuario_logado.addDisciplinaEsportiva(nome, dias, duracao, horario, dias_de_disputa)
+        usuario_logado.addDisciplinaEsportiva(nome, dias, duracao, horaInicio, horaFim, dias_de_disputa)
+        estado = "Menu"
 
-    estado = "Menu"
-    
+
+def state_resolver():
+    global estado
+    if estado == "Fora":
+        estado_fora()
+    elif estado == "Logando":
+        estado_login()
+    elif estado == "Registrando":
+        estado_registrando()
+    elif estado == "Menu":
+        estado_menu()
+    elif estado == "Configurando Mochila":
+        estado_configurando_mochila()
+    elif estado == "Mochila":
+        estado_mochila()
+    elif estado == "Mochila Opcoes":
+        estado_mochila_opcoes()
+    elif estado == "Cadastrando Livros 1":
+        estado_cadastrando_livros(estado_disciplina)
+    elif estado == "Cadastrando Livros 2":
+        estado_cadastrando_livros(None)
+    elif estado == "Parceiros de Estudos":
+        print("Encontrando usuários que estudam no mesmo curso que você... ")
+        us.buscaParceiros(usuario_logado)
+        print("")
+        estado = "Menu"
+    elif estado == "Configurando Conta":
+        estado_configurando_conta()
+    elif estado == "Adicionando Disciplinas":
+        adicionar_disciplinas()
+
+
+# Para fins de teste DO NOT SHIP
 us.registrar("Arthur","peneir20@gmail.com","abC..123","CC")
 us.registrar("Arthur1","peneir21@gmail.com","abC..123","CC")
 us.registrar("Arthur2","peneir22@gmail.com","abC..123","CC")
@@ -490,8 +528,9 @@ us.usuarios[0].switchPublicidade()
 us.usuarios[1].switchPublicidade()
 us.usuarios[3].switchPublicidade()
 us.usuarios[4].switchPublicidade()
+usuario_logado = us.usuarios[0]
+estado = "Menu"
 while True:
-    print(estado)
     state_resolver()
     
 

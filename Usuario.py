@@ -4,7 +4,7 @@ from MochilaDeLivros import *
 
 class Usuario():
     def __init__(self, nome: str, email: str, senha: str, curso: str):
-        self.aptidoes = []
+        self.aptidoes = [False, False, False, False]
         self.nome = nome
         self.email = email
         self.senha = senha
@@ -31,14 +31,13 @@ class Usuario():
     def getEmail(self):
         return self.email
 
-    def addDisciplina(self, nome, dias, duracao, hora):
-        self.disciplinas.append(Disciplina(nome, dias, duracao, hora))
+    def addDisciplinaEsportiva(self, nome, dias, duracao, horaInicio, horaFim, diasDisputa):
+        self.disciplinas.append(DisciplinaEsportiva(nome, dias, duracao, horaInicio, horaFim, diasDisputa))
 
-    def addDisciplinaEsportiva(self, nome, dias, duracao, hora, diasDisputa):
-        self.disciplinas.append(DisciplinaEsportiva(nome, dias, duracao, hora, diasDisputa))
-
-    def addDisciplinaCurricular(self, nome, dias, duracao, hora, diasAtendimento, aptidao):
-        self.disciplinas.append(DisciplinaCurricular(nome, dias, duracao, hora, diasAtendimento))
+    def addDisciplinaCurricular(self, nome, dias, duracao, horaInicio, horaFim, aptidao):
+        disciplina = DisciplinaCurricular(nome, dias, duracao, horaInicio, horaFim, aptidao)
+        self.disciplinas.append(disciplina)
+        return disciplina
 
     def getDisciplinas(self):
         return self.disciplinas
@@ -99,6 +98,9 @@ class Usuario():
         retorno = sorted(self.getDisciplinasCurriculares(), key=lambda d: (d.diasAteAProximaProva(dia), d.getMediaIndefinida(dia), d.isApto(self.aptidoes), d.getListasPreProximaProva(dia)))
         return retorno[0:n-1]
 
+    def getAptidoes(self):
+        return self.aptidoes
+
     def disciplinasDeHoje(self, dds):
         retorno = []
         for i in range(len(self.disciplinas)):
@@ -106,8 +108,39 @@ class Usuario():
                 retorno.append(self.disciplinas[i])
         return retorno
 
+    def getDisciplinasConcluidas(self, dia):
+        retorno = []
+        dcs = self.getDisciplinasCurriculares()
+        for i in range(len(dcs)):
+            if dcs[i].isConcluida():
+                retorno.append(dcs[i])
+        for i in range (len(retorno)):
+            self.disciplinas.remove(retorno[i])
+        return retorno
+
+    def aptidoesToString(self):
+        apt = ""
+        if self.aptidoes[0]:
+            apt += "Linguagens, "
+        if self.aptidoes[1]:
+            apt += "Matemática, "
+        if self.aptidoes[2]:
+            apt += "Ciências Humanas e Sociais, "
+        if self.aptidoes[3]:
+            apt += "Ciências da Natureza."
+        if len(apt) == 0:
+            return f"Nenhuma aptidão"
+        if apt[len(apt) - 2:len(apt)] == ", ":
+            apt = apt[0:len(apt) - 2] + "."
+        return f"{apt}"
+
+    def publicidadeToString(self):
+        if self.isPublica():
+            return "Pública"
+        return "Privada"
+
     def __str__(self):
-        return f"{self.nome} - {self.email} ({self.curso})"
+        return f"{self.nome} - {self.email} ({self.curso} | Aptidões: {self.aptidoesToString()})"
 
     def __eq__(self, other):
         return self.email == other.email
