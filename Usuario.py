@@ -118,12 +118,37 @@ class Usuario():
         self.disciplinas.remove(dcs[indice])
 
 
-    def adicionaDisputas(self, indice, diaDisputa):
-        disciplinaRef = self.getDisciplinaEsportivaPeloIndice(indice)
-        disciplinaOriginal = self.encontraDisciplinaPeloId(disciplinaRef.id)
-        if disciplinaOriginal is not None:
-            #...
-            colisao = self.coincideDisputaComProva(diaDisputa)
+    def adicionaDisputas(self, indiceRef, diaDisputa):
+        disciplinaRef = self.getDisciplinaEsportivaPeloIndice(indiceRef)
+        indice = self.disciplinas.index(disciplinaRef)
+        if indice is not None:
+            dias_de_disputa = input("Dias de Disputa (DD/MM): ")
+            invalido = True
+            while invalido:
+                invalido = False
+                if dias_de_disputa.split("/")[0].isnumeric() and dias_de_disputa.split("/")[1].isnumeric():
+                    if len(dias_de_disputa.split("/")) != 2 or len(dias_de_disputa.split("/")[0]) != 2 or len(
+                            dias_de_disputa.split("/")[1]) != 2 or (
+                            int(dias_de_disputa.split("/")[0]) > 30 and int(dias_de_disputa.split("/")[1]) in [4, 6, 8,
+                                                                                                               10,
+                                                                                                               12]) or (
+                            int(dias_de_disputa.split("/")[0]) > 31 and int(dias_de_disputa.split("/")[1]) in [1, 3, 5,
+                                                                                                               7,
+                                                                                                               9,
+                                                                                                               11]) or (
+                            int(dias_de_disputa.split("/")[0]) > 28 and int(dias_de_disputa.split("/")[1]) in [
+                        2] and mt.ano_e_bissexto() == False) or (int(dias_de_disputa.split("/")[0]) > 29 and int(
+                        dias_de_disputa.split("/")[1]) == 2 and mt.ano_e_bissexto() == True) or int(
+                        dias_de_disputa.split("/")[1]) > 12:
+                        invalido = True
+                        print("Dias inválidos, tente novamente")
+                        dias_de_disputa = input("Dias de Disputa (DD/MM): ")
+                else:
+                    invalido = True
+                    print("Dias inválidos, tente novamente")
+                    dias_de_disputa = input("Dias de Disputa (DD/MM): ")
+            self.disciplinas[indice].addDisputa(dias_de_disputa)
+            colisao = self.coincideEventoDisputa(diaDisputa)
             if colisao != "":
                 print("Há uma colisão de eventos neste dia com uma {colisao}, se certifique de atender ao mais importante e se organizar com antecedência.")
 
