@@ -22,14 +22,15 @@ def estado_hoje():
         print("Livros à Devolver Hoje:")
         for i in range(len(livrosADevolver)):
             print(livrosADevolver[i].exibicao_simples())
-        print("\n")
+        print("")
     else:
         print("Sem livros à devolver hoje. \n")
     provasHoje = usuario_logado.provasHoje(hoje)
     if len(provasHoje) != 0:
         print("Provas de hoje:")
-        for i in range (provasHoje):
+        for i in range (len(provasHoje)):
             print(f"Prova de {provasHoje[i].get_nome()} às {provasHoje[i].getHoraInicioHoje(mt.dia_da_semana())}")
+        print("")
     else:
         print("Sem nenhuma prova hoje!")
 
@@ -38,12 +39,14 @@ def estado_hoje():
         print(f"{len(disciplinasConcluidas)} se encerraram hoje! Removeremos elas automaticamente para você. Aqui estão os resultados... ")
         for i in range(len(disciplinasConcluidas)):
             print(disciplinasConcluidas[i].getMensagemAprovacao())
+        print("")
 
     disputasHoje = usuario_logado.disputasHoje(hoje)
     if len(disputasHoje) > 0:
         print("Você tem disputas hoje!")
         for i in range(len(disputasHoje)):
             print(f"{i+1}. {disputasHoje[i].get_nome()}")
+        print("")
     else:
         print("Você não tem nenhuma disputa hoje!")
 
@@ -52,6 +55,7 @@ def estado_hoje():
         print("Hoje você tem as seguintes aulas: ")
         for i in range(len(aulasHoje)):
             print(f"{i+1}. {aulasHoje[i].get_nome()} às {aulasHoje[i].getHoraInicioHoje(mt.dia_da_semana())}")
+        print("")
     else:
         print("Hoje você não tem nenhuma aula, aproveite o descanso para estudar mais!")
 
@@ -285,7 +289,7 @@ def estado_cadastrando_livros(disciplina: DisciplinaCurricular):
             usuario_logado.mochilaDeLivros.adicionar(l,hoje)
         else:
             l = Livro(titulo,autor,edicao)
-            disciplina.addBibliografia(l)
+            usuario_logado.adicionarBibliografiaADisciplina(disciplina.id,l)
 
 
 def estado_registrando():
@@ -429,6 +433,10 @@ us.usuarios[3].switchPublicidade()
 us.usuarios[4].switchPublicidade()
 us.usuarios[0].addDisciplinaCurricular("Português",[0,1,3],100,[10,9,8],[12,14,10],0)
 us.usuarios[0].addDisciplinaCurricular("Matemática",[2,4,3],100,[8,9,14],[10,14,16],1)
+us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,25))
+us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,24))
+us.usuarios[0].darNotaParaDisciplinaPeloIndice(0,0,10)
+
 usuario_logado = us.usuarios[0]
 estado = "Menu"
 while True:

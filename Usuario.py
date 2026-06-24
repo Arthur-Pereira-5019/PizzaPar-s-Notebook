@@ -57,7 +57,7 @@ class Usuario():
             disciplina = dcs[i]
             provas = disciplina.getProvas()
             for j in range(len(provas)):
-                if provas[j].getData == dia:
+                if provas[j].getData() == dia:
                     provasHoje.append(disciplina)
         return provasHoje
 
@@ -134,7 +134,7 @@ class Usuario():
             return "outra disputa"
         return ""
 
-    def getDisciplinaCurricularPeloIndice(self, indice):
+    def getDisciplinaCurricularPeloIndice(self, indice: int):
         dcs = self.getDisciplinasCurriculares()
         return dcs[indice]
 
@@ -204,10 +204,29 @@ class Usuario():
             total += dcs[i].getNListasAFazer()
         return total
 
+    def darNotaParaDisciplinaPeloIndice(self, indiceRef: int, indiceProva:int, nota):
+        dc = self.getDisciplinaCurricularPeloIndice(indiceRef)
+        indice = self.disciplinas.index(dc)
+        self.disciplinas[indice].darNotaPeloIndice(indiceProva, nota)
+
+    def marcarProvaNaDisciplina(self, indiceRef: int, data: date):
+        dc = self.getDisciplinaCurricularPeloIndice(indiceRef)
+        indice = self.disciplinas.index(dc)
+        if data.weekday() in self.disciplinas[indice].get_dias():
+            self.disciplinas[indice].addProvas(data)
+            print(f"Sucesso, prova marcada no dia: {mt.exibir_data(data)} às {self.disciplinas[indice].getHoraInicioHoje(data.weekday())}")
+        else:
+            print("Erro, prova marcada no dia sem a disciplina!")
+
     def marcarPresencaPeloId(self, id: int, presenca: bool):
         for i in range(len(self.disciplinas)):
             if self.disciplinas[i].id == id:
                 self.disciplinas[i].marcarPresenca(presenca)
+
+    def adicionarBibliografiaADisciplina(self, id: int, livro: Livro):
+        for i in range (len(self.disciplinas)):
+            if self.disciplinas.id == id:
+                self.disciplinas.addBibliografia(livro)
 
     def __str__(self):
         return f"{self.nome} - {self.email} ({self.curso} | Aptidões: {self.aptidoesToString()})"

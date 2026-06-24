@@ -85,7 +85,7 @@ class DisciplinaCurricular(Disciplina):
         super().__init__(nome, dias, duracao, horaInicio, horaFim)
         self.anotacoes = []
         self.listas = []
-        self.provas = []
+        self.provas: list[Provas] = []
         self.duvidas = []
         self.bibliografia = []
         self.aptidao = aptidao
@@ -97,13 +97,15 @@ class DisciplinaCurricular(Disciplina):
         self.listas.append(Listas(data))
         
     def addProvas(self, data):
+        possivel = True
         for i in range(len(self.provas)):
             if self.provas[i].getData == data:
                 print("Erro: Já há uma prova registrada nesse dia e nesta disciplina!")
-            else:
-                self.provas.append(Provas(data))
-                self.provas = sorted(self.provas, key=lambda p: (p.getData()))
-        
+                possivel = False
+        if possivel:
+            self.provas.append(Provas(data))
+            self.provas = sorted(self.provas, key=lambda p: (p.getData()))
+
     def addDuvidas(self, data, texto):
         self.duvidas.append(Duvidas(data, texto))
         
@@ -199,4 +201,7 @@ class DisciplinaCurricular(Disciplina):
                 return f"Parabéns, você foi aprovado em {self.nome} com média {self.getMediaDefinida()}"
             return f"Infelizmente você não obteve aprovação em {self.nome}, sua média final atingida foi: {self.getMediaDefinida()}"
         return f"Infelizmente você não obteve aprovação em {self.nome} por motivos de frequência insuficiente."
+
+    def darNotaPeloIndice(self, indice: int, nota):
+        self.provas[indice].setNota(nota)
 
