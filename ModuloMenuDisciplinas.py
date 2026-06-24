@@ -105,8 +105,7 @@ def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
             if i not in ['1', '2', '3', '4', '5']:
                 invalido = True
                 print("Data inválida, tente novamente")
-                dias = input(
-                    "Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
+                dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
     for j in range(len(dias)):
         dias[j] = int(dias[j])-1
 
@@ -120,44 +119,61 @@ def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
             print("Duração inválida, tente novamente")
             duracao = input("Duração da disciplina (em dias): ")
 
-    horario = input("Horario (HH:MM): ")
+    horaInicio = input("Horario de inicio (HH:MM): ")
     invalido = True
     while invalido:
         invalido = False
-        if horario.split(":")[0].isnumeric() and horario.split(":")[1].isnumeric():
-            if len(horario.split(":")) != 2 or len(horario.split(":")[0]) != 2 or len(
-                    horario.split(":")[1]) != 2 or int(horario.split(":")[0]) >= 24 or int(
-                horario.split(":")[1]) >= 60:
+        if horaInicio.split(":")[0].isnumeric() and horaInicio.split(":")[1].isnumeric():
+            if len(horaInicio.split(":")) != 2 or len(horaInicio.split(":")[0]) != 2 or len(
+                    horaInicio.split(":")[1]) != 2 or int(horaInicio.split(":")[0]) >= 24 or int(
+                horaInicio.split(":")[1]) >= 60:
                 invalido = True
                 print("Horário inválido, tente novamente")
-                horario = input("Horario: ")
+                horaInicio = input("Horario: ")
         else:
             invalido = True
             print("Horário inválido, tente novamente")
-            horario = input("Horario: ")
-    dias_de_disputa = input("Dias de Disputa (DD/MM): ")
+            horaInicio = input("Horario: ")
+
+    horaFim = input("Horario de fim (HH:MM): ")
     invalido = True
     while invalido:
         invalido = False
-        if dias_de_disputa.split("/")[0].isnumeric() and dias_de_disputa.split("/")[1].isnumeric():
-            if len(dias_de_disputa.split("/")) != 2 or len(dias_de_disputa.split("/")[0]) != 2 or len(
-                    dias_de_disputa.split("/")[1]) != 2 or (
-                    int(dias_de_disputa.split("/")[0]) > 30 and int(dias_de_disputa.split("/")[1]) in [4, 6, 8, 10,
-                                                                                                       12]) or (
-                    int(dias_de_disputa.split("/")[0]) > 31 and int(dias_de_disputa.split("/")[1]) in [1, 3, 5, 7,
-                                                                                                       9, 11]) or (
-                    int(dias_de_disputa.split("/")[0]) > 28 and int(dias_de_disputa.split("/")[1]) in [
-                2] and mt.ano_e_bissexto() == False) or (int(dias_de_disputa.split("/")[0]) > 29 and int(
-                dias_de_disputa.split("/")[1]) == 2 and mt.ano_e_bissexto() == True) or int(
-                dias_de_disputa.split("/")[1]) > 12:
+        if horaFim.split(":")[0].isnumeric() and horaFim.split(":")[1].isnumeric():
+            if len(horaFim.split(":")) != 2 or len(horaFim.split(":")[0]) != 2 or len(
+                    horaFim.split(":")[1]) != 2 or int(horaFim.split(":")[0]) >= 24 or int(
+                horaFim.split(":")[1]) >= 60:
                 invalido = True
-                print("Dias inválidos, tente novamente")
-                dias_de_disputa = input("Dias de Disputa (DD/MM): ")
+                print("Horário inválido, tente novamente")
+                horaFim = input("Horario: ")
         else:
             invalido = True
-            print("Dias inválidos, tente novamente")
-            dias_de_disputa = input("Dias de Disputa (DD/MM): ")
-    usuario_logado.addDisciplinaEsportiva(nome, dias, duracao, horaInicio, horaFim, dias_de_disputa)
+            print("Horário inválido, tente novamente")
+            horaFim = input("Horario: ")
+
+    # dias_de_disputa = input("Dias de Disputa (DD/MM): ")
+    # invalido = True
+    # while invalido:
+    #     invalido = False
+    #     if dias_de_disputa.split("/")[0].isnumeric() and dias_de_disputa.split("/")[1].isnumeric():
+    #         if len(dias_de_disputa.split("/")) != 2 or len(dias_de_disputa.split("/")[0]) != 2 or len(
+    #                 dias_de_disputa.split("/")[1]) != 2 or (
+    #                 int(dias_de_disputa.split("/")[0]) > 30 and int(dias_de_disputa.split("/")[1]) in [4, 6, 8, 10,
+    #                                                                                                    12]) or (
+    #                 int(dias_de_disputa.split("/")[0]) > 31 and int(dias_de_disputa.split("/")[1]) in [1, 3, 5, 7,
+    #                                                                                                    9, 11]) or (
+    #                 int(dias_de_disputa.split("/")[0]) > 28 and int(dias_de_disputa.split("/")[1]) in [
+    #             2] and mt.ano_e_bissexto() == False) or (int(dias_de_disputa.split("/")[0]) > 29 and int(
+    #             dias_de_disputa.split("/")[1]) == 2 and mt.ano_e_bissexto() == True) or int(
+    #             dias_de_disputa.split("/")[1]) > 12:
+    #             invalido = True
+    #             print("Dias inválidos, tente novamente")
+    #             dias_de_disputa = input("Dias de Disputa (DD/MM): ")
+    #     else:
+    #         invalido = True
+    #         print("Dias inválidos, tente novamente")
+    #         dias_de_disputa = input("Dias de Disputa (DD/MM): ")
+    usuario_logado.addDisciplinaEsportiva(nome, dias, duracao, horaInicio, horaFim) #, dias_de_disputa )
     return "Menu",usuario_logado
 
 
