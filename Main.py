@@ -5,6 +5,7 @@ from Livros import *
 from MochilaDeLivros import *
 import ModuloTempo as mt
 import ModuloMenuDisciplinas as moduloMenuDisciplinas
+import ModuloMenuAcademicoGeral as moduloMenuAcademico
 
 us = UsuarioService()
 usuario_logado: Usuario = None
@@ -349,7 +350,7 @@ def estado_menu():
     global estado
     while True:
         opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\nConsultar [Mochila] de Livros\n[Sugerir "
-                      "Estudos]\nBuscar [Parceiros] de Estudos\n[Consultar Situação] das notas.\nEncerrar o "
+                      "Estudos]\nBuscar [Parceiros] de Estudos\nConsultar [Situação] das notas e frequência.\nEncerrar o "
                       "[Dia]\nConsultar seus registros para as disciplinas [esportivas]\nConsultar seus registros para as disciplinas [curriculares]\n[Configuracoes] da sua Conta\nEfetuar [Logout]\n")
         match opcao.lower():
             case "hoje":
@@ -360,7 +361,7 @@ def estado_menu():
                 estado = "Sugerindo Estudos"
             case "parceiros":
                 estado = "Parceiros de Estudos"
-            case "consultar situação":
+            case "situação":
                 estado = "Situacao Academica"
             case "dia":
                 estado = "Fim do Dia"
@@ -420,6 +421,8 @@ def state_resolver():
         estado_hoje()
     elif estado == "Fim do Dia":
         estado_fim_do_dia()
+    elif estado == "Situacao Academica":
+        estado, usuario_logado = moduloMenuAcademico.estado_situacao_academica(estado, usuario_logado)
 
 # Para fins de teste DO NOT SHIP
 us.registrar("Arthur","peneir20@gmail.com","abC..123","CC")
