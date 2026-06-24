@@ -166,7 +166,7 @@ class Usuario():
                 retorno.append(self.disciplinas[i])
         return retorno
 
-    def getDisciplinasConcluidas(self, dia):
+    def getDisciplinasConcluidas(self):
         retorno = []
         dcs = self.disciplinas
         for i in range(len(dcs)):

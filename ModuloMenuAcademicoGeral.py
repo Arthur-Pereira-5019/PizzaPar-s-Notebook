@@ -1,6 +1,5 @@
 from datetime import date, datetime, timedelta
 
-from Main import usuario_logado
 from UsuarioService import *
 from Disciplina import *
 from Livros import *
@@ -13,6 +12,6 @@ def estado_situacao_academica(estado, usuario: Usuario):
     disciplinas = usuario.getDisciplinasCurriculares()
     for i in range (len(disciplinas)):
         print(disciplinas[i].get_nome())
-        print(f"Frequência parcial: {disciplinas[i].calcFrequenciaParcial()} Frequência Total: {disciplinas[i].calcFrequenciaTotal()} Nota Parcial: {disciplinas[i].getMediaIndefinida(hoje)}")
+        print(f"Frequência parcial: {disciplinas[i].calcFrequenciaParcial():.2f}% | Frequência Total: {disciplinas[i].calcFrequenciaTotal():.2f}% | Nota Parcial: {disciplinas[i].getMediaIndefinida(hoje)}")
         print("")
     return "Menu", usuario

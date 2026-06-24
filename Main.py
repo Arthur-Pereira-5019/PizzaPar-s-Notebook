@@ -35,13 +35,6 @@ def estado_hoje():
     else:
         print("Sem nenhuma prova hoje!")
 
-    disciplinasConcluidas = usuario_logado.getDisciplinasConcluidas(hoje)
-    if len(disciplinasConcluidas) != 0:
-        print(f"{len(disciplinasConcluidas)} se encerraram hoje! Removeremos elas automaticamente para você. Aqui estão os resultados... ")
-        for i in range(len(disciplinasConcluidas)):
-            print(disciplinasConcluidas[i].getMensagemAprovacao())
-        print("")
-
     disputasHoje = usuario_logado.disputasHoje(hoje)
     if len(disputasHoje) > 0:
         print("Você tem disputas hoje!")
@@ -55,7 +48,7 @@ def estado_hoje():
     if len(aulasHoje) > 0:
         print("Hoje você tem as seguintes aulas: ")
         for i in range(len(aulasHoje)):
-            print(f"{i+1}. {aulasHoje[i].get_nome()} às {aulasHoje[i].getHoraInicioHoje(mt.dia_da_semana())}")
+            print(f"{i+1}. [{aulasHoje[i].stringAulas()}] {aulasHoje[i].get_nome()} às {aulasHoje[i].getHoraInicioHoje(mt.dia_da_semana())}")
         print("")
     else:
         print("Hoje você não tem nenhuma aula, aproveite o descanso para estudar mais!")
@@ -350,7 +343,7 @@ def estado_menu():
     global estado
     while True:
         opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\nConsultar [Mochila] de Livros\n[Sugerir "
-                      "Estudos]\nBuscar [Parceiros] de Estudos\nConsultar [Situação] das notas e frequência.\nEncerrar o "
+                      "Estudos]\nBuscar [Parceiros] de Estudos\nConsultar [Situacao] das notas e frequência.\nEncerrar o "
                       "[Dia]\nConsultar seus registros para as disciplinas [esportivas]\nConsultar seus registros para as disciplinas [curriculares]\n[Configuracoes] da sua Conta\nEfetuar [Logout]\n")
         match opcao.lower():
             case "hoje":
@@ -361,7 +354,7 @@ def estado_menu():
                 estado = "Sugerindo Estudos"
             case "parceiros":
                 estado = "Parceiros de Estudos"
-            case "situação":
+            case "situacao":
                 estado = "Situacao Academica"
             case "dia":
                 estado = "Fim do Dia"
@@ -384,6 +377,12 @@ def state_resolver():
     global estado
     global usuario_logado
     global estado_disciplina
+    disciplinasConcluidas = usuario_logado.getDisciplinasConcluidas()
+    if len(disciplinasConcluidas) != 0:
+        print(f"{len(disciplinasConcluidas)} se encerraram hoje! Removeremos elas automaticamente para você. Aqui estão os resultados... ")
+        for i in range(len(disciplinasConcluidas)):
+            print(disciplinasConcluidas[i].getMensagemAprovacao())
+        print("")
     if estado == "Fora":
         estado_fora()
     elif estado == "Logando":
@@ -434,8 +433,8 @@ us.usuarios[0].switchPublicidade()
 us.usuarios[1].switchPublicidade()
 us.usuarios[3].switchPublicidade()
 us.usuarios[4].switchPublicidade()
-us.usuarios[0].addDisciplinaCurricular("Português",[0,1,3],100,[10,9,8],[12,14,10],0)
-us.usuarios[0].addDisciplinaCurricular("Matemática",[2,4,3],100,[8,9,14],[10,14,16],1)
+us.usuarios[0].addDisciplinaCurricular("Português",[0,1,3],7,[10,9,8],[12,14,10],0)
+us.usuarios[0].addDisciplinaCurricular("Matemática",[2,4,3],7,[8,9,14],[10,14,16],1)
 us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,25))
 us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,24))
 us.usuarios[0].darNotaParaDisciplinaPeloIndice(0,0,10)

@@ -36,6 +36,9 @@ class Disciplina:
     def getHoraFim(self):
         return self.horaInicio
 
+    def stringAulas(self):
+        return f"{self.marcadorPresenca}/{len(self.listaDePresenca)}"
+
     def getHoraFimHoje(self, dds):
         return self.horaFim[self.dias.index(dds)]
 
@@ -146,7 +149,7 @@ class DisciplinaCurricular(Disciplina):
     def getProvasAnteriores(self, dia):
         retorno = []
         for i in range (len(self.provas)):
-            if self.provas[i] < dia:
+            if self.provas[i].getData() < dia:
                 retorno.append(self.provas[i])
         return retorno
 
@@ -176,10 +179,12 @@ class DisciplinaCurricular(Disciplina):
 
     def calcFrequenciaParcial(self):
         presencas = 0
+        if self.marcadorPresenca == 0:
+            return 0
         for i in range (self.marcadorPresenca+1):
             if self.listaDePresenca[i]:
                 presencas += 1
-        return presencas / ((self.marcadorPresenca+1) / 100)
+        return presencas / (self.marcadorPresenca / 100)
 
     def calcFrequenciaTotal(self):
         presencas = 0
