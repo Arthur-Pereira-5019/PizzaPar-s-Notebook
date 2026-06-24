@@ -45,6 +45,22 @@ class Disciplina:
     def getHoraInicioHoje(self, dds):
         return self.horaInicio[self.dias.index(dds)]
 
+    def calcFrequenciaParcial(self):
+        presencas = 0
+        if self.marcadorPresenca == 0:
+            return 0
+        for i in range (self.marcadorPresenca+1):
+            if self.listaDePresenca[i]:
+                presencas += 1
+        return presencas / (self.marcadorPresenca / 100)
+
+    def calcFrequenciaTotal(self):
+        presencas = 0
+        for i in range(len(self.listaDePresenca)):
+            if self.listaDePresenca[i]:
+                presencas += 1
+        return presencas / ((len(self.listaDePresenca)) / 100)
+
     def marcarPresenca(self, presenca: bool):
         self.listaDePresenca[self.marcadorPresenca] = presenca
         self.marcadorPresenca += 1
@@ -80,6 +96,11 @@ class DisciplinaEsportiva(Disciplina):
     def removerDisputaPeloIndice(self, indice: int, dia):
         disputas = self.getProximasDisputas(dia)
         self.diasDisputa.remove(disputas[indice])
+
+    def getMensagemAprovacao(self):
+        if self.calcFrequenciaTotal() > 0.75:
+            return f"Parabéns, seu ciclo de treinos em {self.nome} se encerrou, você obteve participação mínima suficiente para ser aprovado."
+        return f"Infelizmente você não obteve aprovação em {self.nome} por motivos de frequência insuficiente."
 
     
 
@@ -177,21 +198,7 @@ class DisciplinaCurricular(Disciplina):
     def isApto(self, aptidoes):
         return aptidoes[self.aptidao]
 
-    def calcFrequenciaParcial(self):
-        presencas = 0
-        if self.marcadorPresenca == 0:
-            return 0
-        for i in range (self.marcadorPresenca+1):
-            if self.listaDePresenca[i]:
-                presencas += 1
-        return presencas / (self.marcadorPresenca / 100)
 
-    def calcFrequenciaTotal(self):
-        presencas = 0
-        for i in range(len(self.listaDePresenca)):
-            if self.listaDePresenca[i]:
-                presencas += 1
-        return presencas / ((len(self.listaDePresenca)) / 100)
 
     def getNListasAFazer(self):
         n = 0
@@ -203,8 +210,8 @@ class DisciplinaCurricular(Disciplina):
     def getMensagemAprovacao(self):
         if self.calcFrequenciaTotal() > 0.75:
             if self.getMediaDefinida() > 6.0:
-                return f"Parabéns, você foi aprovado em {self.nome} com média {self.getMediaDefinida()}"
-            return f"Infelizmente você não obteve aprovação em {self.nome}, sua média final atingida foi: {self.getMediaDefinida()}"
+                return f"Parabéns, você foi aprovado em {self.nome} com média {self.getMediaDefinida():.2f}"
+            return f"Infelizmente você não obteve aprovação em {self.nome}, sua média final atingida foi: {self.getMediaDefinida():.2f}"
         return f"Infelizmente você não obteve aprovação em {self.nome} por motivos de frequência insuficiente."
 
     def darNotaPeloIndice(self, indice: int, nota):

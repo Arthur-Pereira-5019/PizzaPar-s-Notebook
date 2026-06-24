@@ -130,8 +130,12 @@ def estado_configurando_conta():
 def estado_fim_do_dia():
     global estado
     print("Encerrando o dia...")
-    print("O dia foi letivo? [S/N]")
     disciplinas_hoje = usuario_logado.disciplinasDeHoje(mt.dia_da_semana())
+    if len(disciplinas_hoje) == 0:
+        estado = "Menu"
+        mt.proximo()
+        return
+    print("O dia foi letivo? [S/N]")
     while True:
         dl = input()
         if dl == "S":
@@ -434,10 +438,13 @@ us.usuarios[1].switchPublicidade()
 us.usuarios[3].switchPublicidade()
 us.usuarios[4].switchPublicidade()
 us.usuarios[0].addDisciplinaCurricular("Português",[0,1,3],7,[10,9,8],[12,14,10],0)
-us.usuarios[0].addDisciplinaCurricular("Matemática",[2,4,3],7,[8,9,14],[10,14,16],1)
+# us.usuarios[0].addDisciplinaCurricular("Matemática",[2,4,3],7,[8,9,14],[10,14,16],1)
 us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,25))
-us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,24))
-us.usuarios[0].darNotaParaDisciplinaPeloIndice(0,0,10)
+us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,29))
+us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,30))
+us.usuarios[0].darNotaParaDisciplinaPeloIndice(0,0,7)
+us.usuarios[0].darNotaParaDisciplinaPeloIndice(0,1,8)
+us.usuarios[0].darNotaParaDisciplinaPeloIndice(0,2,4)
 
 usuario_logado = us.usuarios[0]
 estado = "Menu"
