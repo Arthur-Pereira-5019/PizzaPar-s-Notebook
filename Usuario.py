@@ -250,8 +250,8 @@ class Usuario():
 
     def adicionarBibliografiaADisciplina(self, id: int, livro: Livro):
         for i in range (len(self.disciplinas)):
-            if self.disciplinas.id == id:
-                self.disciplinas.addBibliografia(livro)
+            if self.disciplinas[i].id == id:
+                self.disciplinas[i].addBibliografia(livro)
 
     def __str__(self):
         return f"{self.nome} - {self.email} ({self.curso} | Aptidões: {self.aptidoesToString()})"

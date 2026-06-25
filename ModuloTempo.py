@@ -12,6 +12,9 @@ def dia_da_semana():
 def exibir_dia_da_semana():
     return dias_da_semana[dia_da_semana()]
 
+def exibirDiaDaSemanaEspecifico(data: date):
+    return dias_da_semana[data.weekday()]
+
 def ano_e_bissexto():
     if data_de_hoje().year % 400 == 0:
         return True
@@ -26,7 +29,7 @@ def exibir_data_hoje():
     return f"{hoje.day}/{hoje.month}/{hoje.year} ({exibir_dia_da_semana()})"
 
 def exibir_data(dia):
-    return f"{dia.day}/{dia.month}/{dia.year} ({exibir_dia_da_semana()})"
+    return f"{dia.day}/{dia.month}/{dia.year} ({exibirDiaDaSemanaEspecifico(dia)})"
 
 def proximo():
     global offsetDias

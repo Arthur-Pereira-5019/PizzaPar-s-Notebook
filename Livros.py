@@ -1,12 +1,11 @@
 from datetime import date, datetime, timedelta
 
 class Livro:
-    def __init__(self, titulo: str, autor: str, edicao: int):
+    def __init__(self, titulo: str, autor: str):
         self.titulo = titulo
         self.data_de_emprestimo = None
         self.autor = autor
         self.nRenovacoes = 0
-        self.edicao = edicao
         self.emprestado = False
         self.data_de_devolucao = None
 
@@ -52,28 +51,28 @@ class Livro:
     def dias_ate_vencer(self, dia: date):
         return (self.data_de_devolucao-dia).days
 
-    def calcularMulta(self, taxa: float, dia: date):
-        t = self.dias_ate_vencer(dia)
+    def calcularMulta(self, taxa: float, dia: date) -> float:
+        t = float(self.dias_ate_vencer(dia))
         if t > 0:
             return 0.0
         else:
-            return t*taxa
+            return -t*taxa
 
     def exibicao(self,taxa,dia: date):
         da = self.dias_ate_vencer(dia)
         if not self.emprestado:
             return self.exibicao_simples()
         if da < 0:
-            return f"{self.titulo} {self.edicao}ed {self.autor}. Atrasado em {da*-1} dias!. Multa: {self.calcularMulta(taxa,dia)}R$"
-        return f"{self.titulo} {self.edicao}ed {self.autor}. Devolução: {self.data_de_devolucao}"
+            return f"{self.titulo}. {self.autor.upper()}. Atrasado em {da*-1} dias!. Multa: {self.calcularMulta(taxa,dia)}R$"
+        return f"{self.titulo}. {self.autor.upper()}. Devolução: {self.data_de_devolucao}"
 
     def exibicao_simples(self):
-        return f"{self.titulo} {self.edicao}ed {self.autor}"
+        return f"{self.titulo}. {self.autor.upper()}"
 
     def __eq__(self, other):
-        if (self.autor == other.autor) and (self.titulo == other.titulo) and (self.edicao == other.edicao):
+        if (self.autor == other.autor) and (self.titulo == other.titulo):
             return True
         return False
 
     def gNRenovacoes(self):
-        return self.gNRenovacoes()
+        return self.nRenovacoes

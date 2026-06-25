@@ -15,9 +15,6 @@ class MochilaDeLivros:
         self.configurada = True
 
     def devolver(self, indice: int, dia: date):
-        if indice < 1 or indice > len(self.livros):
-            print("Índice fora da lista de livros, cheque o seu comando.")
-            return
         livro = self.livros[indice-1]
         ex = livro.exibicao_simples()
         multa = livro.calcularMulta(self.multa,dia)
@@ -29,9 +26,6 @@ class MochilaDeLivros:
         self.organizar(dia)
 
     def renovar(self, indice: int, dia: date):
-        if indice < 0 or indice > len(self.livros):
-            print("Índice fora da lista de livros, cheque o seu comando.")
-            return
         livro = self.livros[indice]
         ex = livro.exibicao_simples()
         multa = livro.calcularMulta(self.multa, dia)
@@ -59,7 +53,7 @@ class MochilaDeLivros:
         multa = 0.0
         livrosAtrasados = self.livrosAtrasados(dia)
         for i in range (len(livrosAtrasados)):
-            multa += livrosAtrasados[i].calcularMulta(livrosAtrasados,dia)
+            multa += livrosAtrasados[i].calcularMulta(self.multa,dia)
         return multa
 
     def exibicao(self, dia: date):
@@ -83,11 +77,11 @@ class MochilaDeLivros:
             if biblio[i] in self.livros:
                 continue
             else:
-                faltantes.append(biblio)
+                faltantes.append(biblio[i])
         return faltantes
 
     def calcularDevolucao(self, dia):
-        return timedelta(dia + self.tempo_emprestimo)
+        return dia + timedelta(self.tempo_emprestimo)
 
     def isConfigurada(self):
         return self.configurada
@@ -102,9 +96,12 @@ class MochilaDeLivros:
     def exibirAtrasos(self, dia: date):
         atrasados = self.livrosAtrasados(dia)
         nAtrasados = len(atrasados)
-        for i in range(nAtrasados):
-            print(f"{i + 1}. {atrasados[i].exibicao}")
-        print("\n")
+        if nAtrasados == 0:
+            print("Nenhum livro atrasado para a data informada.")
+        else:
+            for i in range(nAtrasados):
+                print(f"{i + 1}. {atrasados[i].exibicao(self.multa,dia)}")
+            print("\n")
 
     def gerarResumo(self, dia):
         nAtrasados = len(self.livrosAtrasados(dia))
