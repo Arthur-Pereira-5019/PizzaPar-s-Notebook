@@ -32,6 +32,8 @@ class MochilaDeLivros:
         if livro.gNRenovacoes() > self.renovacoes:
             print("Este exemplar está no limite de renovações, impossível renovar.")
             return
+        self.livros[indice].nRenovacoes += 1
+        self.livros[indice].renovar(dia,self.tempo_emprestimo)
         if multa > 0:
             print(f"{ex} renovado com uma multa de {multa}R$.")
         else:
@@ -109,10 +111,14 @@ class MochilaDeLivros:
 
         print(f"Você está com {len(self.livros)} livros em sua mochila")
         if nAtrasados > 0:
-            multaAcumulada = self.multaAcumulada(dia)
-            print(f"Existem {nAtrasados} livros atrasados, gerando uma multa de: {multaAcumulada}R$.")
+            print(self.textoAtraso(dia))
         if nDevolver > 0:
             print(f"{nDevolver} livros devem ser devolvidos hoje.")
+
+    def textoAtraso(self, dia):
+        nAtrasados = len(self.livrosAtrasados(dia))
+        multaAcumulada = self.multaAcumulada(dia)
+        return f"Existem {nAtrasados} livros atrasados, gerando uma multa de: {multaAcumulada}R$."
 
     def getLivros(self):
         return self.livros

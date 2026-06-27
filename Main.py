@@ -26,6 +26,12 @@ def estado_hoje():
         print("")
     else:
         print("Sem livros à devolver hoje. \n")
+
+    atrasos = usuario_logado.mochilaDeLivros.livrosAtrasados(hoje)
+    if len(atrasos) > 0:
+        print(usuario_logado.mochilaDeLivros.textoAtraso(hoje))
+        print("Cheque a mochila de livros para obter mais detalhes!")
+
     provasHoje = usuario_logado.provasHoje(hoje)
     if len(provasHoje) != 0:
         print("Provas de hoje:")
@@ -489,7 +495,7 @@ us.usuarios[0].disciplinas[0].addProvas(date(2026,7,1))
 us.usuarios[0].disciplinas[1].addProvas(date(2026,7,1))
 
 usuario_logado = us.usuarios[0]
-estado = "Sugerindo Estudos"
+estado = "Adicionar Livro"
 while True:
     state_resolver()
     
