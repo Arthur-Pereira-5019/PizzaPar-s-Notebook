@@ -241,14 +241,73 @@ class Usuario():
         indice = self.disciplinas.index(dc)
         self.disciplinas[indice].darNotaPeloIndice(indiceProva, nota)
 
-    def marcarProvaNaDisciplina(self, indiceRef: int, data: date):
-        dc = self.getDisciplinaCurricularPeloIndice(indiceRef)
-        indice = self.disciplinas.index(dc)
-        if data.weekday() in self.disciplinas[indice].get_dias():
-            self.disciplinas[indice].addProvas(data)
-            print(f"Sucesso, prova marcada no dia: {mt.exibir_data(data)} às {self.disciplinas[indice].getHoraInicioHoje(data.weekday())}")
-        else:
-            print("Erro, prova marcada no dia sem a disciplina!")
+
+    def adicionaProvas(self, indiceRef):
+        disciplinaRef = self.getDisciplinaCurricularPeloIndice(indiceRef)
+        indice = self.disciplinas.index(disciplinaRef)
+        if indice is not None:
+            dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
+            invalido = True
+            while invalido:
+                invalido = False
+                if len(dias_de_prova.split("/")) == 3:
+                    if dias_de_prova.split("/")[0].isnumeric() and dias_de_prova.split("/")[1].isnumeric() and dias_de_prova.split("/")[2].isnumeric():
+                        if (len(dias_de_prova.split("/")[0]) != 2 or len(dias_de_prova.split("/")[1]) != 2
+                                or (
+                                int(dias_de_prova.split("/")[0]) > 30 and int(dias_de_prova.split("/")[1]) in [4, 6, 8,
+                                                                                                                   10,
+                                                                                                                   12]) or (
+                                int(dias_de_prova.split("/")[0]) > 31 and int(dias_de_prova.split("/")[1]) in [1, 3, 5,
+                                                                                                                   7,
+                                                                                                                   9,
+                                                                                                                   11]) or (
+                                int(dias_de_prova.split("/")[0]) > 28 and int(dias_de_prova.split("/")[1]) in [
+                            2] and mt.ano_e_bissexto() == False) or (int(dias_de_prova.split("/")[0]) > 29 and int(
+                            dias_de_prova.split("/")[1]) == 2 and mt.ano_e_bissexto() == True) or int(
+                            dias_de_prova.split("/")[1]) > 12):
+                            invalido = True
+                            print("Dia inválido, tente novamente")
+                            dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
+                    else:
+                        invalido = True
+                        print("Dias inválidos, tente novamente")
+                        dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
+                else:
+                    invalido = True
+                    print(dias_de_prova)
+                    print("Formato inválido, tente novamente")
+                    dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
+                dias_de_prova = date(int(dias_de_prova[6::]), int(dias_de_prova[3:5:]), int(dias_de_prova[:2:]))
+                if dias_de_prova.weekday() in self.disciplinas[indice].get_dias():
+                    #self.disciplinas[indice].addProvas(dias_de_prova)
+                    print(
+                        f"Sucesso, prova marcada no dia: {mt.exibir_data(dias_de_prova)} às {self.disciplinas[indice].getHoraInicioHoje(dias_de_prova.weekday())}")
+                else:
+                    print(dias_de_prova.weekday())
+                    print(self.disciplinas[indice].get_dias())
+                    print("Erro, prova marcada no dia sem a disciplina!")
+                    dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
+                    invalido = True
+            colisao = self.coincideEventoDisputa(dias_de_prova)
+            self.disciplinas[indice].addProvas(dias_de_prova)
+            if colisao != "":
+                print(f"Há uma colisão de eventos neste dia com uma {colisao}, se certifique de atender ao mais importante e se organizar com antecedência.")
+
+    def adicionaListas(self, indiceRef):
+        hoje = mt.data_de_hoje()
+        disciplinaRef = self.getDisciplinaCurricularPeloIndice(indiceRef)
+        indice = self.disciplinas.index(disciplinaRef)
+        self.disciplinas[indice].addListas(hoje)
+        print("Lista adicionada com sucesso")
+
+    # def marcarProvaNaDisciplina(self, indiceRef: int, data: date):
+    #     dc = self.getDisciplinaCurricularPeloIndice(indiceRef)
+    #     indice = self.disciplinas.index(dc)
+    #     if data.weekday() in self.disciplinas[indice].get_dias():
+    #         self.disciplinas[indice].addProvas(data)
+    #         print(f"Sucesso, prova marcada no dia: {mt.exibir_data(data)} às {self.disciplinas[indice].getHoraInicioHoje(data.weekday())}")
+    #     else:
+    #         print("Erro, prova marcada no dia sem a disciplina!")
 
     def marcarPresencaPeloId(self, id: int, presenca: bool):
         for i in range(len(self.disciplinas)):

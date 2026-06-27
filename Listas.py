@@ -3,11 +3,16 @@ class Listas:
         self.data = data
         self.feita = False
         
-    def Fazer(self):
+    def fazer(self):
         self.feita = True
     
     def getFeita(self):
         return self.feita
+
+    def getFeitaString(self):
+        if self.feita:
+            return("Feita")
+        return("Incompleta")
 
     def getData(self):
         return self.data
