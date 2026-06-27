@@ -369,15 +369,15 @@ def estado_fora():
 def estado_menu():
     global estado
     while True:
-        opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\nConsultar [Mochila] de Livros\n[Sugerir "
-                      "Estudos]\nBuscar [Parceiros] de Estudos\nConsultar [Situacao] das notas e frequência.\nEncerrar o "
+        opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\nConsultar [Mochila] de Livros\n[Sugerir] "
+                      "Estudos\nBuscar [Parceiros] de Estudos\nConsultar [Situacao] das notas e frequência.\nEncerrar o "
                       "[Dia]\nConsultar seus registros para as disciplinas [esportivas]\nConsultar seus registros para as disciplinas [curriculares]\n[Configuracoes] da sua Conta\nEfetuar [Logout]\n")
         match opcao.lower():
             case "hoje":
                 estado = "Hoje"
             case "mochila":
                 estado = "Mochila"
-            case "sugerir estudos":
+            case "sugerir":
                 estado = "Sugerindo Estudos"
             case "parceiros":
                 estado = "Parceiros de Estudos"
@@ -451,6 +451,8 @@ def state_resolver():
         estado, usuario_logado = moduloMenuAcademico.estado_situacao_academica(estado, usuario_logado)
     elif estado == "Adicionar Livro":
         estado_adicionando_livro()
+    elif estado == "Sugerindo Estudos":
+        estado, usuario_logado = moduloMenuAcademico.estado_sugerindo_estudos(estado,usuario_logado)
     else:
         print("Sistema em estado ilegal, retornando ao Menu!")
         estado = "Menu"
@@ -465,8 +467,8 @@ us.usuarios[0].switchPublicidade()
 us.usuarios[1].switchPublicidade()
 us.usuarios[3].switchPublicidade()
 us.usuarios[4].switchPublicidade()
-us.usuarios[0].addDisciplinaCurricular("Português",[2,3,4],7,["10:00","09:00","08:00"],["12:00","14:00","10:00"],0)
-us.usuarios[0].addDisciplinaCurricular("Matemática",[2,4,3],7,["08:00","09:00","14:00"],["10:00","14:00","16:00"],1)
+us.usuarios[0].addDisciplinaCurricular("Português",[0,1,2],7,["10:00","09:00","08:00"],["12:00","14:00","10:00"],0)
+us.usuarios[0].addDisciplinaCurricular("Matemática",[2,3,4],7,["08:00","09:00","14:00"],["10:00","14:00","16:00"],1)
 
 us.usuarios[0].adicionarBibliografiaADisciplina(0,Livro("Dicionário","Aurélio"))
 us.usuarios[0].adicionarBibliografiaADisciplina(0,Livro("Brás Cubas","Machado de Assis"))
@@ -483,9 +485,11 @@ us.usuarios[0].mochilaDeLivros.configurar(1.50,2,2)
 #us.usuarios[0].darNotaParaDisciplinaPeloIndice(0,1,8)
 #us.usuarios[0].darNotaParaDisciplinaPeloIndice(0,2,4)
 #us.usuarios[0].darNotaParaDisciplinaPeloIndice(1,0,5)
+us.usuarios[0].disciplinas[0].addProvas(date(2026,7,1))
+us.usuarios[0].disciplinas[1].addProvas(date(2026,7,1))
 
 usuario_logado = us.usuarios[0]
-estado = "Adicionar Livro"
+estado = "Sugerindo Estudos"
 while True:
     state_resolver()
     

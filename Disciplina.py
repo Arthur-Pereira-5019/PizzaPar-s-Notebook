@@ -133,7 +133,7 @@ class DisciplinaCurricular(Disciplina):
 
     def getProximaProva(self, dia: date) -> Provas | None:
         for i in range (len(self.provas)):
-            if self.provas[i] > dia:
+            if self.provas[i].getData() > dia:
                 return self.provas[i]
         return None
 
@@ -146,8 +146,8 @@ class DisciplinaCurricular(Disciplina):
     def diasAteAProximaProva(self, dia):
         pp = self.getProximaProva(dia)
         if pp is None:
-            return float('inf')
-        return timedelta(pp.getData() - dia)
+            return -1
+        return (pp.getData() - dia).days
 
     def getProvasAnteriores(self, dia):
         retorno = []
@@ -155,6 +155,35 @@ class DisciplinaCurricular(Disciplina):
             if self.provas[i].getData() < dia:
                 retorno.append(self.provas[i])
         return retorno
+
+    def pesoParaEstudar(self, dia, aptidoes):
+        nApto = not self.isApto(aptidoes)
+        necessidade = self.diasAteAProximaProva(dia)+1
+        if necessidade != 0:
+            necessidade = 100/necessidade
+            necessidade = necessidade * (11-(self.getMediaIndefinida(dia)))
+            if nApto:
+                necessidade = necessidade * 1.5
+            necessidade += self.getListasPreProximaProva(dia)*33
+            return necessidade
+        return (11-(self.getMediaIndefinida(dia)/3))*self.getMediaIndefinida(dia)*(nApto * 1.1)
+
+    def stringMotivacaoParaEstudar(self, dia, aptidoes):
+        apto = ""
+        diaProva = self.diasAteAProximaProva(dia)
+        diaProvaStr = self.diasAteAProximaProva(dia)
+        mediaAtual = f"{self.getMediaIndefinida(dia):.2f}"
+        if self.isApto(aptidoes):
+            apto = "Você é apto."
+        else:
+            apto = "Você não é apto."
+        if diaProva == -1:
+            return f"{self.nome} | Sem mais provas. | Média Atual: {mediaAtual} | {apto}"
+        if diaProva == 0:
+            diaProvaStr = "Prova hoje!"
+        else:
+            diaProvaStr = f"Prova em {diaProva} dias."
+        return f"{self.nome} | {diaProvaStr}. | Média Atual: {mediaAtual} | {apto} Número de listas até a próxima prova: {self.getListasPreProximaProva(dia)}"
 
     def getMediaIndefinida(self, dia):
         provasAnteriores = self.getProvasAnteriores(dia)
@@ -224,7 +253,7 @@ class DisciplinaCurricular(Disciplina):
     def exibirDiasDeProva(self):
         provas = self.getProvas()
         for i in range(len(provas)):
-            print(f"{i + 1} {mt.exibir_data(provas[i].getData())}")
+            print(f"{i + 1}. {mt.exibir_data(provas[i].getData())}")
 
     def exibirListas(self):
         listas = self.getListas()

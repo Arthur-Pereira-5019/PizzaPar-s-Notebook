@@ -8,7 +8,7 @@ import ModuloTempo as mt
 def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
     dias_por_indice = {1:"Segunda", 2:"Terça", 3:"Quarta", 4:"Quinta", 5:"Sexta"}
     nome = input("Nome da Disciplina: ")
-    dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
+    dias = input("Dias de aula (Informe em lista separada por espaços):\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
     invalido = True
     while invalido:
         invalido = False
@@ -35,7 +35,7 @@ def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
     horaInicio = []
     horaFim = []
     for i in range(len(dias)):
-        print("Horario de inicio na ", dias_por_indice[int(dias[i]) + 1], " (HH:MM): ", end='')
+        print("Horário de inicio na", dias_por_indice[int(dias[i]) + 1], "(HH:MM): ", end='')
         horaInicio_try = input()
         invalido = True
         while invalido:
@@ -50,10 +50,10 @@ def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
             else:
                 invalido = True
                 print("Horário inválido, tente novamente")
-                horaInicio_try = input("Horario: ")
+                horaInicio_try = input("Horário: ")
         horaInicio.append(horaInicio_try)
 
-        print("Horario de fim na ", dias_por_indice[int(dias[i]) + 1], " (HH:MM): ", end='')
+        print("Horário de fim na ", dias_por_indice[int(dias[i]) + 1], " (HH:MM): ", end='')
         horaFim_try = input()
         invalido = True
         while invalido:
@@ -78,18 +78,6 @@ def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
             if hI != "" and hF != "":
                 if hI < horaInicio[-1] < hF or hI < horaFim[-1] < hF:
                     print("Cuidado! Houve conflito de horario com a disciplina ", j.get_nome())
-
-    atendimento = input("Dias de Atendimento:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
-    invalido = True
-    while invalido:
-        invalido = False
-        for i in atendimento:
-            if i not in ['1', '2', '3', '4', '5']:
-                invalido = True
-                print("Data inválida, tente novamente")
-                atendimento = input(
-                    "Dias de Atendimento:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
-
     ap_numero = 0
     while True:
         aptidao = input("Digite qual é a aptidao que melhor descreve essa disciplina? [Linguagens]/["

@@ -185,8 +185,8 @@ class Usuario():
         return None
 
     def disciplinasSugeridas(self,n: int,dia: date):
-        retorno = sorted(self.getDisciplinasCurriculares(), key=lambda d: (d.diasAteAProximaProva(dia), d.getMediaIndefinida(dia), d.isApto(self.aptidoes), d.getListasPreProximaProva(dia)))
-        return retorno[0:n-1]
+        retorno = sorted(self.getDisciplinasCurriculares(), key=lambda d: (d.pesoParaEstudar(dia,self.aptidoes)),reverse=True)
+        return retorno[0:n]
 
     def getAptidoes(self):
         return self.aptidoes
