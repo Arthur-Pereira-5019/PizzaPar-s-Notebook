@@ -2,7 +2,6 @@ from typing import Any
 
 from Listas import Listas
 from Provas import Provas
-from Duvidas import Duvidas
 from datetime import date, timedelta
 import ModuloTempo as mt
 
