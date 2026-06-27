@@ -83,7 +83,6 @@ class DisciplinaCurricular(Disciplina):
         super().__init__(nome, dias, duracao, horaInicio, horaFim)
         self.listas = []
         self.provas: list[Provas] = []
-        self.duvidas = []
         self.bibliografia = []
         self.aptidao = aptidao
     

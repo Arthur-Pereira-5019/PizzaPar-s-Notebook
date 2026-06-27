@@ -154,12 +154,12 @@ class Usuario():
                     print("Formato inválido, tente novamente")
                     dias_de_disputa = input("Dia de Disputa (DD/MM/YYYY): ")
             dias_de_disputa = date(int(dias_de_disputa[6::]), int(dias_de_disputa[3:5:]), int(dias_de_disputa[:2:]))
-            colisao = self.coincideEventoDisputa(dias_de_disputa)
+            colisao = self.stringColisao(dias_de_disputa)
             self.disciplinas[indice].addDisputa(dias_de_disputa)
             if colisao != "":
                 print(f"Há uma colisão de eventos neste dia com uma {colisao}, se certifique de atender ao mais importante e se organizar com antecedência.")
 
-    def coincideEventoDisputa(self, dia):
+    def stringColisao(self, dia):
         if self.provasHoje(dia):
             return "prova"
         elif self.disputasHoje(dia):
@@ -288,7 +288,7 @@ class Usuario():
                     print("Erro, prova marcada no dia sem a disciplina!")
                     dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
                     invalido = True
-            colisao = self.coincideEventoDisputa(dias_de_prova)
+            colisao = self.stringColisao(dias_de_prova)
             self.disciplinas[indice].addProvas(dias_de_prova)
             if colisao != "":
                 print(f"Há uma colisão de eventos neste dia com uma {colisao}, se certifique de atender ao mais importante e se organizar com antecedência.")

@@ -18,11 +18,10 @@ def validarSenha(senha):
     return False
 
 
-class UsuarioService():
+class UsuarioService:
     usuarios:list[Usuario] = []
-    
+
     def login(self, email: str, senha: str):
-        #global self.usuarios
         encontrado = False
         for i in range (len(self.usuarios)):
             if self.usuarios[i].getEmail() == email:
@@ -44,8 +43,6 @@ class UsuarioService():
         return nu
     
     def verificar_email(self, email: str):
-        #global self.usuarios
-        #print(self.usuarios)
         for i in range(len(self.usuarios)):
             if self.usuarios[i].getEmail() == email:
                 print("Usuário com este E-Mail já registrado, faça login ou cheque a ortografia do E-Mail")
