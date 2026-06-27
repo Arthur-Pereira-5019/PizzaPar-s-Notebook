@@ -28,12 +28,6 @@ class Disciplina:
     def get_duracao(self):
         return self.duracao
 
-    def getHoraHoje(self):
-        return self.horaInicio
-
-    def getHoraFim(self):
-        return self.horaInicio
-
     def stringAulas(self):
         return f"{self.marcadorPresenca}/{len(self.listaDePresenca)}"
 
@@ -87,15 +81,11 @@ class DisciplinaEsportiva(Disciplina):
 class DisciplinaCurricular(Disciplina):
     def __init__(self, nome, dias, duracao, horaInicio, horaFim, aptidao):
         super().__init__(nome, dias, duracao, horaInicio, horaFim)
-        self.anotacoes = []
         self.listas = []
         self.provas: list[Provas] = []
         self.duvidas = []
         self.bibliografia = []
         self.aptidao = aptidao
-        
-    def addAnotacoes(self, data, texto):
-        self.anotacoes.append(Anotacoes(data, texto))
     
     def addListas(self, data):
         self.listas.append(Listas(data))
@@ -109,9 +99,6 @@ class DisciplinaCurricular(Disciplina):
         if possivel:
             self.provas.append(Provas(data))
             self.provas = sorted(self.provas, key=lambda p: (p.getData()))
-
-    def addDuvidas(self, data, texto):
-        self.duvidas.append(Duvidas(data, texto))
         
     def addBibliografia(self, livro):
         self.bibliografia.append(livro)

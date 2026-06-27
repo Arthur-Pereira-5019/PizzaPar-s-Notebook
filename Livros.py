@@ -74,5 +74,5 @@ class Livro:
             return True
         return False
 
-    def gNRenovacoes(self):
+    def getNRenovacoes(self):
         return self.nRenovacoes
