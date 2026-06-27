@@ -1,6 +1,5 @@
 from typing import Any
 
-from Anotacoes import Anotacoes
 from Listas import Listas
 from Provas import Provas
 from Duvidas import Duvidas
