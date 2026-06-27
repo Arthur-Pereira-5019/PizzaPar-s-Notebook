@@ -213,3 +213,23 @@ class DisciplinaCurricular(Disciplina):
     def darNotaPeloIndice(self, indice: int, nota):
         self.provas[indice].setNota(nota)
 
+    def removerProvaPeloIndice(self, indice: int):
+        provas = self.getProvas()
+        self.provas.remove(provas[indice])
+
+    def removerListaPeloIndice(self, indice: int):
+        listas = self.getListas()
+        self.listas.remove(listas[indice])
+
+    def exibirDiasDeProva(self):
+        provas = self.getProvas()
+        for i in range(len(provas)):
+            print(f"{i + 1} {mt.exibir_data(provas[i].getData())}")
+
+    def exibirListas(self):
+        listas = self.getListas()
+        for i in range(len(listas)):
+            print(f"{i+1} Adicionada em {mt.exibir_data(listas[i].getData())}\n{listas[i].getFeitaString()}")
+
+    def getListas(self):
+        return(self.listas)
