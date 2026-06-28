@@ -1,8 +1,5 @@
 from datetime import date, datetime, timedelta
 from UsuarioService import *
-from Disciplina import *
-from Livros import *
-from MochilaDeLivros import *
 import ModuloTempo as mt
 
 def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
@@ -80,8 +77,8 @@ def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
                     print("Cuidado! Há um conflito de horário com a disciplina:", j.get_nome())
     ap_numero = 0
     while True:
-        aptidao = input("Digite qual é a aptidao que melhor descreve essa disciplina? [Linguagens]/["
-                        "Matematica]/Ciências [Humanas] e Sociais/Ciências da [Natureza]")
+        aptidao = input("Digite qual é a aptidão que melhor descreve essa disciplina? [Linguagens] / ["
+                        "Matematica] / Ciências [Humanas] e Sociais / Ciências da [Natureza]: ")
         aptidao = aptidao.lower()
         if aptidao == "linguagens":
             ap_numero = 0
@@ -95,6 +92,8 @@ def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
         elif aptidao == "natureza":
             ap_numero = 3
             break
+        else:
+            print("Entrada não compreendida, cheque a ortografia do comando e tente novamente.")
     estado_disciplina = usuario_logado.addDisciplinaCurricular(nome, dias, duracao, horaInicio, horaFim, ap_numero)
     print("Disciplina registrada com sucesso! Agora vamos registrar a bibliografia dessa disciplina.")
     return "Cadastrando Livros 1", usuario_logado, estado_disciplina
@@ -131,7 +130,7 @@ def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
     horaInicio = []
     horaFim = []
     for i in range(len(dias)):
-        print("Horario de inicio na ", dias_por_indice[int(dias[i]) + 1], " (HH:MM): ", end='')
+        print("Horário de inicio na", dias_por_indice[int(dias[i]) + 1], "(HH:MM): ", end='')
         horaInicio_try = input()
         invalido = True
         while invalido:
@@ -141,15 +140,15 @@ def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
                         horaInicio_try.split(":")[1]) != 2 or int(horaInicio_try.split(":")[0]) >= 24 or int(
                     horaInicio_try.split(":")[1]) >= 60:
                     invalido = True
-                    print("Horário inválido, tente novamente")
+                    horaFim_try = input(f"Horário de início na {dias_por_indice[int(dias[i]) + 1]} (HH:MM): ")
                     horaInicio_try = input("Horario: ")
             else:
                 invalido = True
-                print("Horário inválido, tente novamente")
+                horaFim_try = input(f"Horário de início na {dias_por_indice[int(dias[i]) + 1]} (HH:MM): ")
                 horaInicio_try = input("Horario: ")
         horaInicio.append(horaInicio_try)
 
-        print("Horario de fim na ", dias_por_indice[int(dias[i]) + 1], " (HH:MM): ", end='')
+        print("Horário de fim na",dias_por_indice[int(dias[i]) + 1],"(HH:MM): ", end='')
         horaFim_try = input()
         invalido = True
         while invalido:
@@ -159,12 +158,12 @@ def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
                         horaFim_try.split(":")[1]) != 2 or int(horaFim_try.split(":")[0]) >= 24 or int(
                     horaFim_try.split(":")[1]) >= 60:
                     invalido = True
-                    print("Horário inválido, tente novamente")
-                    horaFim_try = input("Horario: ")
+                    print("Horário inválido, tente novamente.")
+                    horaFim_try = input(f"Horário de fim na {dias_por_indice[int(dias[i]) + 1]} (HH:MM): ")
             else:
                 invalido = True
-                print("Horário inválido, tente novamente")
-                horaFim_try = input("Horario: ")
+                print("Horário inválido, tente novamente.")
+                horaFim_try = input(f"Horário de fim na {dias_por_indice[int(dias[i]) + 1]} (HH:MM): ")
         horaFim.append(horaFim_try)
         
         disciplinasDeHoje = usuario_logado.disciplinasDeHoje(dias[i])
@@ -208,7 +207,6 @@ def estado_consultando_esportivas(usuario_logado: Usuario):
         elif op == "adicionar":
             return "Adicionando Disciplinas 2", usuario_logado
         elif op == "marcar":
-            # TODO Pega o input que tá no construtor de disciplinas esportivas, coloca no métod0 acessório ali
             usuario_logado.adicionaDisputas(indice)
             return "Consultando Esportivas", usuario_logado
         elif op == "desmarcar":

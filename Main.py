@@ -242,48 +242,60 @@ def estado_mochila_opcoes():
     global estado
     hoje = mt.data_de_hoje()
     taxa = usuario_logado.mochilaDeLivros.getMulta()
-    print("\nPara exibir informações mais detalhadas. Você pode:\nConsultar [Atrasos]\nConsultar Bibliografia ["
-          "Faltante]\nConsultar seus [Emprestimos]\n[Renovar] seus livros\n[Devolver] seus livros\n[Adicionar] um "
-          "livro à mochila\n[Reconfigurar] sua mochila.\n[Sair] para voltar ao menu principal.")
     while True:
+        print("\nPara exibir informações mais detalhadas. Você pode:\nConsultar [Atrasos]\nConsultar Bibliografia ["
+              "Faltante]\nConsultar seus [Emprestimos]\n[Renovar] seus livros\n[Devolver] seus livros\n[Adicionar] um "
+              "livro à mochila\n[Reconfigurar] sua mochila.\n[Sair] para voltar ao menu principal.")
         op = input().lower()
-        estado = "Menu"
+        estado = "Mochila Opcoes"
         if op == "atrasos":
             usuario_logado.mochilaDeLivros.exibirAtrasos(hoje)
         elif op == "faltante":
-            disciplinas = usuario_logado.getDisciplinas()
-            faltantes = []
-            print("Faltam os seguintes livros na sua mochila: ")
+            disciplinas = usuario_logado.getDisciplinasCurriculares()
+            achado = False
             for i in range(len(disciplinas)):
-                faltantes.extend(usuario_logado.mochilaDeLivros.cruzarBibliografia(disciplinas[i]))
-            for i in range(len(faltantes)):
-                print(f"{i+1}. {faltantes[i].exibicao_simples()}")
+                faltantes = usuario_logado.mochilaDeLivros.cruzarBibliografia(disciplinas[i])
+                if len(faltantes) != 0:
+                    if not achado:
+                        print("Faltam os seguintes livros na sua mochila: ")
+                        achado = True
+                    print(f"{disciplinas[i].get_nome()}:")
+                    for j in range(len(faltantes)):
+                        print(f"  {j+1}. {faltantes[j].exibicao_simples()}")
+            if not achado:
+                print("Sua bibliografia está completa!")
         elif op == "emprestimos":
             usuario_logado.mochilaDeLivros.exibicao(hoje)
         elif op == "renovar":
-            usuario_logado.mochilaDeLivros.exibicao(hoje)
-            while True:
-                i = int(input("Digite o índice do livro a ser renovado: "))
-                i = int(i) - 1
-                if 0 <= i < len(usuario_logado.mochilaDeLivros.getLivros()):
-                    usuario_logado.mochilaDeLivros.renovar(i,hoje)
-                    break
-                else:
-                    print("Digite um índice que esteja compreendido pela lista de livros emprestados.")
+            if len(usuario_logado.mochilaDeLivros.livros) != 0:
+                usuario_logado.mochilaDeLivros.exibicao(hoje)
+                while True:
+                    i = int(input("Digite o índice do livro a ser renovado: "))
+                    i = int(i) - 1
+                    if 0 <= i < len(usuario_logado.mochilaDeLivros.getLivros()):
+                        usuario_logado.mochilaDeLivros.renovar(i,hoje)
+                        break
+                    else:
+                        print("Digite um índice que esteja compreendido pela lista de livros emprestados.")
+            else:
+                print("Você não está com nenhum livro em sua mochila!.")
         elif op == "devolver":
-            usuario_logado.mochilaDeLivros.exibicao(hoje)
-            while True:
-                i = (input("Digite o índice do livro a ser renovado. Preencha o índice com [tudo] para devolver todos "
-                              "os livros simultaneamente: "))
-                if i.lower() == "tudo":
-                    usuario_logado.mochilaDeLivros.devolverTudo(hoje)
-                    break
-                i = int(i)-1
-                if 0 <= i < len(usuario_logado.mochilaDeLivros.getLivros()):
-                    usuario_logado.mochilaDeLivros.devolver(int(i),hoje)
-                    break
-                else:
-                    print("Digite um índice que esteja compreendido pela lista de livros emprestados.")
+            if len(usuario_logado.mochilaDeLivros.livros) != 0:
+                usuario_logado.mochilaDeLivros.exibicao(hoje)
+                while True:
+                    i = (input("Digite o índice do livro a ser renovado. Preencha o índice com [tudo] para devolver todos "
+                                  "os livros simultaneamente: "))
+                    if i.lower() == "tudo":
+                        usuario_logado.mochilaDeLivros.devolverTudo(hoje)
+                        break
+                    i = int(i)-1
+                    if 0 <= i < len(usuario_logado.mochilaDeLivros.getLivros()):
+                        usuario_logado.mochilaDeLivros.devolver(int(i),hoje)
+                        break
+                    else:
+                        print("Digite um índice que esteja compreendido pela lista de livros emprestados.")
+            else:
+                print("Você não está com nenhum livro em sua mochila!")
         elif op == "adicionar":
             estado = "Adicionar Livro"
         elif op == "reconfigurar":

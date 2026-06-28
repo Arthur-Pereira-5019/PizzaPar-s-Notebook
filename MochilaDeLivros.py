@@ -109,16 +109,16 @@ class MochilaDeLivros:
         nAtrasados = len(self.livrosAtrasados(dia))
         nDevolver = len(self.livrosADevolverHoje(dia))
 
-        print(f"Você está com {len(self.livros)} livros em sua mochila")
+        print(f"Você está com {len(self.livros)} livro(s) em sua mochila")
         if nAtrasados > 0:
             print(self.textoAtraso(dia))
         if nDevolver > 0:
-            print(f"{nDevolver} livros devem ser devolvidos hoje.")
+            print(f"{nDevolver} livro(s) deve(m) ser devolvido(s) hoje.")
 
     def textoAtraso(self, dia):
         nAtrasados = len(self.livrosAtrasados(dia))
         multaAcumulada = self.multaAcumulada(dia)
-        return f"Existem {nAtrasados} livros atrasados, gerando uma multa de: {multaAcumulada}R$."
+        return f"Existe(m) {nAtrasados} livro(s) atrasado(s), gerando uma multa de: {multaAcumulada:.2f}R$."
 
     def getLivros(self):
         return self.livros
