@@ -29,7 +29,7 @@ class MochilaDeLivros:
         livro = self.livros[indice]
         ex = livro.exibicao_simples()
         multa = livro.calcularMulta(self.multa, dia)
-        if livro.gNRenovacoes() > self.renovacoes:
+        if livro.getNRenovacoes() > self.renovacoes:
             print("Este exemplar está no limite de renovações, impossível renovar.")
             return
         self.livros[indice].nRenovacoes += 1
@@ -63,7 +63,7 @@ class MochilaDeLivros:
             print(f"{i+1}. {self.livros[i].exibicao(self.multa,dia)}")
 
     def organizar(self, dia: date):
-        self.livros = sorted(self.livros, key=lambda l: (l.calcularMulta(self.multa,dia), l.data_de_devolucao, l.titulo))
+        self.livros = sorted(self.livros, key=lambda l: (l.calcularMulta(self.multa,dia), l.data_de_devolucao, l.titulo),reverse=True)
 
     def livrosADevolverHoje(self, dia: date):
         devolver = []

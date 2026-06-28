@@ -214,7 +214,7 @@ def estado_adicionando_livro():
                         for j in range(len(biblio)):
                             print(f"{j + 1}. {biblio[j].exibicao_simples()}")
                         k = (input(
-                            "Digite o índice do livro que você deseja adicionar a sua mochila. Ou preencha com sair para retornar ao menu principal."))
+                            "Digite o índice do livro que você deseja adicionar a sua mochila. Ou preencha com sair para retornar ao menu principal: "))
                         if k.lower() == "sair":
                             estado = "Menu"
                             break
@@ -480,7 +480,7 @@ def state_resolver():
         estado = "Menu"
 
 # Para fins de teste DO NOT SHIP
-#us.registrar("Arthur","peneir20@gmail.com","abC..123","CC")
+us.registrar("Arthur","peneir20@gmail.com","abC..123","CC")
 #us.registrar("Arthur1","peneir21@gmail.com","abC..123","CC")
 #us.registrar("Arthur2","peneir22@gmail.com","abC..123","CC")
 #us.registrar("Arthur3","peneir23@gmail.com","abC..123","Agronomia")
@@ -489,8 +489,7 @@ def state_resolver():
 #us.usuarios[1].switchPublicidade()
 #us.usuarios[3].switchPublicidade()
 #us.usuarios[4].switchPublicidade()
-#us.usuarios[0].addDisciplinaCurricular("Português",[0,1,2],7,["10:00","09:00","08:00"],["12:00","14:00","10:00"],0)
-#us.usuarios[0].addDisciplinaCurricular("Matemática",[2,3,4],7,["08:00","09:00","14:00"],["10:00","14:00","16:00"],1)
+us.usuarios[0].addDisciplinaCurricular("Fundamentos",[0,1,2],100,["08:10","10:10","10:10"],["10:10","12:10","12:10"],1)
 
 #us.usuarios[0].adicionarBibliografiaADisciplina(0,Livro("Dicionário","Aurélio"))
 #us.usuarios[0].adicionarBibliografiaADisciplina(0,Livro("Brás Cubas","Machado de Assis"))
@@ -498,7 +497,7 @@ def state_resolver():
 #us.usuarios[0].adicionarBibliografiaADisciplina(1,Livro("Elementos","Euclides"))
 #us.usuarios[0].adicionarBibliografiaADisciplina(1,Livro("Discrete Mathematics","Kolman"))
 
-#us.usuarios[0].mochilaDeLivros.configurar(1.50,2,2)
+us.usuarios[0].mochilaDeLivros.configurar(1.50,1,1)
 #us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,25))
 #us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,29))
 #us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,30))
@@ -510,7 +509,11 @@ def state_resolver():
 #us.usuarios[0].disciplinas[0].addProvas(date(2026,7,1))
 #us.usuarios[0].disciplinas[1].addProvas(date(2026,7,1))
 
-#usuario_logado = us.usuarios[0]
+estado = "Menu"
+us.usuarios[0].adicionarBibliografiaADisciplina(0,Livro("Elementos","Euclides"))
+us.usuarios[0].adicionarBibliografiaADisciplina(0,Livro("Discrete Mathematics","Kolman"))
+
+usuario_logado = us.usuarios[0]
 #estado = "Adicionar Livro"
 while True:
     state_resolver()

@@ -63,7 +63,7 @@ class Livro:
         if not self.emprestado:
             return self.exibicao_simples()
         if da < 0:
-            return f"{self.titulo}. {self.autor.upper()}. Atrasado em {da*-1} dias!. Multa: {self.calcularMulta(taxa,dia)}R$"
+            return f"{self.titulo}. {self.autor.upper()}. Atrasado em {da*-1} dias!. Multa: {self.calcularMulta(taxa,dia):.2f}R$"
         return f"{self.titulo}. {self.autor.upper()}. Devolução: {self.data_de_devolucao}"
 
     def exibicao_simples(self):

@@ -32,7 +32,7 @@ def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
     horaInicio = []
     horaFim = []
     for i in range(len(dias)):
-        print("Horário de inicio na", dias_por_indice[int(dias[i]) + 1], "(HH:MM): ", end='')
+        print("Horário de inicio na",dias_por_indice[int(dias[i]) + 1],"(HH:MM): ", end='')
         horaInicio_try = input()
         invalido = True
         while invalido:
@@ -50,7 +50,7 @@ def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
                 horaInicio_try = input("Horário: ")
         horaInicio.append(horaInicio_try)
 
-        print("Horário de fim na ", dias_por_indice[int(dias[i]) + 1], " (HH:MM): ", end='')
+        print("Horário de fim na",dias_por_indice[int(dias[i]) + 1],"(HH:MM): ", end='')
         horaFim_try = input()
         invalido = True
         while invalido:
@@ -130,7 +130,7 @@ def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
     horaInicio = []
     horaFim = []
     for i in range(len(dias)):
-        print("Horário de inicio na", dias_por_indice[int(dias[i]) + 1], "(HH:MM): ", end='')
+        print("Horário de início na", dias_por_indice[int(dias[i]) + 1], "(HH:MM): ", end='')
         horaInicio_try = input()
         invalido = True
         while invalido:
