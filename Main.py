@@ -464,7 +464,7 @@ def state_resolver():
     elif estado == "Consultando Esportivas":
         estado, usuario_logado = moduloMenuDisciplinas.estado_consultando_esportivas(usuario_logado)
     elif estado == "Consultando Curriculares":
-        estado, usuario_logado = moduloMenuDisciplinas.estado_consultando_curriculares(usuario_logado)
+        estado, usuario_logado, estado_disciplina = moduloMenuDisciplinas.estado_consultando_curriculares(usuario_logado)
     elif estado == "Hoje":
         estado_hoje()
     elif estado == "Fim do Dia":

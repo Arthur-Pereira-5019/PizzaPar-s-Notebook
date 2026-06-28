@@ -90,13 +90,19 @@ class Usuario():
 
     def exibirDisciplinasCurriculares(self):
         dcs = self.getDisciplinasCurriculares()
-        for i in range(len(dcs)):
-            print(f"{i+1}. {dcs[i].get_nome()}")
+        if dcs != []:
+            for i in range(len(dcs)):
+                print(f"{i+1}. {dcs[i].get_nome()}")
+        else:
+            print("Nenhuma disciplina curricular cadastrada.")
 
     def exibirDisciplinasEsportivas(self):
         des = self.getDisciplinasEsportivas()
-        for i in range(len(des)):
-            print(f"{i+1}. {des[i].get_nome()}")
+        if des != []:
+            for i in range(len(des)):
+                print(f"{i+1}. {des[i].get_nome()}")
+        else:
+            print("Nenhuma disciplina esportiva cadastrada.")
 
     def getCurso(self):
         return self.curso
@@ -274,7 +280,7 @@ class Usuario():
                         dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
                 else:
                     invalido = True
-                    print(dias_de_prova)
+                    #print(dias_de_prova)
                     print("Formato inválido, tente novamente")
                     dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
                 dias_de_prova = date(int(dias_de_prova[6::]), int(dias_de_prova[3:5:]), int(dias_de_prova[:2:]))

@@ -181,25 +181,28 @@ def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
 
 def estado_consultando_esportivas(usuario_logado: Usuario):
     hoje = mt.data_de_hoje()
-    print("Você deseja: [Remover] uma disciplina esportiva.\n[Adicionar] uma disciplina.\n[Marcar] um dia de "
+    print("Você deseja: [Exibir] disciplinas esportivas cadastradas\n[Remover] uma disciplina esportiva.\n[Adicionar] uma disciplina.\n[Marcar] um dia de "
           "disputa.\n[Desmarcar] uma disputa\n[Sair]")
     while True:
         op = input()
         op = op.lower()
         indice = 0
         if op == "remover" or op == "marcar" or op == "desmarcar":
-            usuario_logado.exibirDisciplinasEsportivas()
-            limite = len(usuario_logado.getDisciplinasEsportivas())
-            while True:
-                indice_str = input()
-                if indice_str.isnumeric():
-                    indice = int(indice_str) - 1
-                    if indice < 0 or indice >= limite:
-                        print("Índice fora do escopo, digite novamente")
+            if usuario_logado.getDisciplinasEsportivas() != []:
+                usuario_logado.exibirDisciplinasEsportivas()
+                limite = len(usuario_logado.getDisciplinasEsportivas())
+                while True:
+                    indice_str = input()
+                    if indice_str.isnumeric():
+                        indice = int(indice_str) - 1
+                        if indice < 0 or indice >= limite:
+                            print("Índice fora do escopo, digite novamente")
+                        else:
+                            break
                     else:
-                        break
-                else:
-                    print("Índice inválido. Esperando um número.")
+                        print("Índice inválido. Esperando um número.")
+            else:
+                print("Você ainda não tem disciplinas esportivas cadastradas!")
         if op == "remover":
             usuario_logado.removerDisciplinaEsportivaPeloIndice(indice)
             print("Disciplina removida com sucesso!")
@@ -211,20 +214,26 @@ def estado_consultando_esportivas(usuario_logado: Usuario):
             return "Consultando Esportivas", usuario_logado
         elif op == "desmarcar":
             disciplinaEsportiva = usuario_logado.getDisciplinaEsportivaPeloIndice(indice)
-            disciplinaEsportiva.exibirDiasDisputa(hoje)
-            limite = len(disciplinaEsportiva.getProximasDisputas(hoje))
-            while True:
-                indice_str = input()
-                if indice_str.isnumeric():
-                    indice = int(indice_str) - 1
-                    if indice < 0 or indice >= limite:
-                        print("Índice fora do escopo, digite novamente")
+            if disciplinaEsportiva.getDiasDisputa() != []:
+                disciplinaEsportiva.exibirDiasDisputa()
+                limite = len(disciplinaEsportiva.getProximasDisputas(hoje))
+                while True:
+                    indice_str = input()
+                    if indice_str.isnumeric():
+                        indice = int(indice_str) - 1
+                        if indice < 0 or indice >= limite:
+                            print("Índice fora do escopo, digite novamente")
+                        else:
+                            break
                     else:
-                        break
-                else:
-                    print("Índice inválido. Esperando um número.")
-            disciplinaEsportiva.removerDisputaPeloIndice(indice, hoje)
-            print("Disputa removida da sua agenda com sucesso!")
+                        print("Índice inválido. Esperando um número.")
+                disciplinaEsportiva.removerDisputaPeloIndice(indice, hoje)
+                print("Disputa removida da sua agenda com sucesso!")
+            else:
+                print("Você ainda não tem disputas marcadas!")
+            return "Consultando Esportivas", usuario_logado
+        elif op == "exibir":
+            usuario_logado.exibirDisciplinasEsportivas()
             return "Consultando Esportivas", usuario_logado
         elif op == "sair":
             return "Menu", usuario_logado
@@ -233,168 +242,132 @@ def estado_consultando_esportivas(usuario_logado: Usuario):
 
 
 def estado_consultando_curriculares(usuario_logado: Usuario):
-    print("Você deseja: [Remover] uma disciplina curricular.\n[Adicionar] uma disciplina.\nConsultar suas [Provas]\nConsultar suas [listas]\n[Sair]")
+    print("Você deseja: [Exibir] disciplinas esportivas cadastradas\n[Remover] uma disciplina curricular.\n[Adicionar] uma disciplina.\nAdicionar [bibliografia]\nConsultar suas [Provas]\nConsultar suas [listas]\n[Sair]")
+    indice = 0
     while True:
         op = input()
         op = op.lower()
-        if op == "remover":
-            usuario_logado.exibirDisciplinasCurriculares()
-            limite = len(usuario_logado.getDisciplinasCurriculares())
-            indice = 0
-            while True:
-                indice_str = input()
-                if indice_str.isnumeric():
-                    indice = int(indice_str) - 1
-                    if indice < 0 or indice >= limite:
-                        print("Índice fora do escopo, digite novamente")
+        if op == "remover" or op == "provas" or op == "listas" or op == "bibliografia":
+            if usuario_logado.getDisciplinasCurriculares() != 0:
+                usuario_logado.exibirDisciplinasCurriculares()
+                limite = len(usuario_logado.getDisciplinasCurriculares())
+                indice = 0
+                while True:
+                    indice_str = input()
+                    if indice_str.isnumeric():
+                        indice = int(indice_str) - 1
+                        if indice < 0 or indice >= limite:
+                            print("Índice fora do escopo, digite novamente")
+                        else:
+                            disciplina_curricular = usuario_logado.getDisciplinaCurricularPeloIndice(indice)
+                            break
                     else:
-                        break
-                else:
-                    print("Índice inválido. Esperando um número.")
+                        print("Índice inválido. Esperando um número.")
+            else:
+                print("Você ainda não tem disciplinas curriculares cadastradas!")
+                return "Consultando Curriculares", usuario_logado, None
+        if op == "remover":
             usuario_logado.removerDisciplinaCurricularPeloIndice(indice)
             print("Disciplina removida com sucesso!")
-            return "Consultando Curriculares", usuario_logado
         elif op == "adicionar":
-            return "Adicionando Disciplinas 1", usuario_logado
+            return "Adicionando Disciplinas 1", usuario_logado, None
         elif op == "provas":
-
-            estado_consultando_provas(usuario_logado)
-            return "Consultando Curriculares", usuario_logado
+            estado_consultando_provas(usuario_logado, disciplina_curricular)
+            return "Consultando Curriculares", usuario_logado, None
+        elif op == "bibliografia":
+            return "Cadastrando Livros 1", usuario_logado, disciplina_curricular
         elif op == "listas":
 
-            estado_consultando_listas(usuario_logado)
-            return "Consultando Curriculares", usuario_logado
+            estado_consultando_listas(usuario_logado, disciplina_curricular)
+            return "Consultando Curriculares", usuario_logado, None
         elif op == "sair":
-            return "Menu", usuario_logado
+            return "Menu", usuario_logado, None
+        elif op == "exibir":
+            usuario_logado.exibirDisciplinasCurriculares()
+            return "Consultando Curriculares", usuario_logado, None
         else:
             print("Comando não compreendido, cheque a ortografia e tente novamente.")
 
 
-def estado_consultando_listas(usuario_logado: Usuario):
-    hoje = mt.data_de_hoje()
-    limite = len(usuario_logado.getDisciplinasCurriculares())
+def estado_consultando_listas(usuario_logado: Usuario, disciplinaCurricular: DisciplinaCurricular):
     indice = 0
-    usuario_logado.exibirDisciplinasCurriculares()
-    while True:
-        indice_str = input()
-        if indice_str.isnumeric():
-            indice = int(indice_str) - 1
-            if indice < 0 or indice >= limite:
-                print("Índice fora do escopo, digite novamente")
-            else:
-                break
-        else:
-            print("Índice inválido. Esperando um número.")
-
-    print("Você deseja: [Remover] uma lista.\n[Adicionar] uma lista.\n[Fazer] uma lista\n[Sair]")
+    print("Você deseja: Você deseja: [Exibir] listas cadastradas\n[Remover] uma lista.\n[Adicionar] uma lista.\n[Fazer] uma lista\n[Sair]")
     while True:
         op = input()
         op = op.lower()
-        if op == "remover":
-            disciplinaCurricular = usuario_logado.getDisciplinaCurricularPeloIndice(indice)
+        if op == "remover" or op == "fazer":
             limite = len(disciplinaCurricular.getListas())
-            disciplinaCurricular.exibirListas()
-            while True:
-                indice_str = input()
-                if indice_str.isnumeric():
-                    indice = int(indice_str) - 1
-                    if indice < 0 or indice >= limite:
-                        print("Índice fora do escopo, digite novamente")
+            if disciplinaCurricular.getListas() != []:
+                disciplinaCurricular.exibirListas()
+                while True:
+                    indice_str = input()
+                    if indice_str.isnumeric():
+                        indice = int(indice_str) - 1
+                        if indice < 0 or indice >= limite:
+                            print("Índice fora do escopo, digite novamente")
+                        else:
+                            break
                     else:
-                        break
-                else:
-                    print("Índice inválido. Esperando um número.")
-            print(disciplinaCurricular.getListas())
+                        print("Índice inválido. Esperando um número.")
+            else:
+                print("Você ainda não tem listas cadastradas!")
+                return "Consultando Curriculares", usuario_logado, None
+
+        if op == "remover":
             disciplinaCurricular.removerListaPeloIndice(indice)
             print("Lista removida com sucesso!")
-            return "Consultando Curriculares", usuario_logado
+            return "Consultando Curriculares", usuario_logado, None
+
+        elif op == "fazer":
+            disciplinaCurricular.getListas()[indice].fazer()
+            print("Nota registrada com sucesso!")
+            return "Consultando Curriculares", usuario_logado, None
 
         elif op == "adicionar":
             usuario_logado.adicionaListas(indice)
-            return "Consultando Curriculares", usuario_logado
+            return "Consultando Curriculares", usuario_logado, None
 
-        elif op == "fazer":
-            disciplinaCurricular = usuario_logado.getDisciplinaCurricularPeloIndice(indice)
-            limite = len(disciplinaCurricular.getListas())
+
+        elif op == "exibir":
             disciplinaCurricular.exibirListas()
-            while True:
-                indice_str = input()
-                if indice_str.isnumeric():
-                    indice = int(indice_str) - 1
-                    if indice < 0 or indice >= limite:
-                        print("Índice fora do escopo, digite novamente")
-                    else:
-                        break
-                else:
-                    print("Índice inválido. Esperando um número.")
-
-            disciplinaCurricular.getListas()[indice].fazer()
-            print("Nota registrada com sucesso!")
-            return "Consultando Curriculares", usuario_logado
+            return "Consultando Curriculares", usuario_logado, None
 
         elif op == "sair":
-            return "Consultando Curriculares", usuario_logado
+            return "Consultando Curriculares", usuario_logado, None
         else:
             print("Comando não compreendido, cheque a ortografia e tente novamente.")
 
 
-def estado_consultando_provas(usuario_logado: Usuario):
-    hoje = mt.data_de_hoje()
-    limite = len(usuario_logado.getDisciplinasCurriculares())
+def estado_consultando_provas(usuario_logado: Usuario, disciplinaCurricular: DisciplinaCurricular):
     indice = 0
-    usuario_logado.exibirDisciplinasCurriculares()
-    while True:
-        indice_str = input()
-        if indice_str.isnumeric():
-            indice = int(indice_str) - 1
-            if indice < 0 or indice >= limite:
-                print("Índice fora do escopo, digite novamente")
-            else:
-                break
-        else:
-            print("Índice inválido. Esperando um número.")
-
-    print("Você deseja: [Remover] uma prova.\n[Adicionar] uma prova.\nDefinir a [nota] de uma prova\n[Sair]")
+    print("Você deseja: Você deseja: [Exibir] provas cadastradas\n[Remover] uma prova.\n[Adicionar] uma prova.\nDefinir a [nota] de uma prova\n[Sair]")
     while True:
         op = input()
         op = op.lower()
-        if op == "remover":
-            disciplinaCurricular = usuario_logado.getDisciplinaCurricularPeloIndice(indice)
+        if op == "remover" or op == "nota":
             limite = len(disciplinaCurricular.getProvas())
             disciplinaCurricular.exibirDiasDeProva()
-            while True:
-                indice_str = input()
-                if indice_str.isnumeric():
-                    indice = int(indice_str) - 1
-                    if indice < 0 or indice >= limite:
-                        print("Índice fora do escopo, digite novamente")
+            if disciplinaCurricular.getProvas() != []:
+                while True:
+                    indice_str = input()
+                    if indice_str.isnumeric():
+                        indice = int(indice_str) - 1
+                        if indice < 0 or indice >= limite:
+                            print("Índice fora do escopo, digite novamente")
+                        else:
+                            break
                     else:
-                        break
-                else:
-                    print("Índice inválido. Esperando um número.")
+                        print("Índice inválido. Esperando um número.")
+            else:
+                print("Você ainda não tem provas cadastradas!")
+                return "Consultando Curriculares", usuario_logado, None
+
+        if op == "remover":
             disciplinaCurricular.removerProvaPeloIndice(indice)
             print("Prova removida com sucesso!")
-            return "Consultando Curriculares", usuario_logado
-
-        elif op == "adicionar":
-            usuario_logado.adicionaProvas(indice)
-            return "Consultando Curriculares", usuario_logado
+            return "Consultando Curriculares", usuario_logado, None
 
         elif op == "nota":
-            disciplinaCurricular = usuario_logado.getDisciplinaCurricularPeloIndice(indice)
-            limite = len(disciplinaCurricular.getProvas())
-            disciplinaCurricular.exibirDiasDeProva()
-            while True:
-                indice_str = input()
-                if indice_str.isnumeric():
-                    indice = int(indice_str) - 1
-                    if indice < 0 or indice >= limite:
-                        print("Índice fora do escopo, digite novamente")
-                    else:
-                        break
-                else:
-                    print("Índice inválido. Esperando um número.")
-
             nota = input("Nota a ser marcada: ")
             while True:
                 if nota.isnumeric() and 0 <= float(nota) <= 10:
@@ -405,10 +378,19 @@ def estado_consultando_provas(usuario_logado: Usuario):
 
             disciplinaCurricular.getProvas()[indice].setNota(nota)
             print("Nota registrada com sucesso!")
-            return "Consultando Curriculares", usuario_logado
+            return "Consultando Curriculares", usuario_logado, None
+
+        elif op == "adicionar":
+            usuario_logado.adicionaProvas(indice)
+            return "Consultando Curriculares", usuario_logado, None
 
         elif op == "sair":
-            return "Consultando Curriculares", usuario_logado
+            return "Consultando Curriculares", usuario_logado, None
+
+        if op == "exibir":
+            disciplinaCurricular.exibirDiasDeProva()
+            return "Consultando Curriculares", usuario_logado, None
+
         else:
             print("Comando não compreendido, cheque a ortografia e tente novamente.")
 

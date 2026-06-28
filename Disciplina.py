@@ -80,11 +80,21 @@ class DisciplinaEsportiva(Disciplina):
                 retorno.append(disputas[i])
         return retorno
 
-    def exibirDiasDisputa(self, dia):
+    def exibirProximosDiasDisputa(self, dia):
         disputas = self.getProximasDisputas(dia)
-        for i in range(len(disputas)):
-            print(f"{i+1} {mt.exibir_data(disputas[i])}")
+        if disputas != []:
+            for i in range(len(disputas)):
+                print(f"{i + 1} {mt.exibir_data(disputas[i])}")
+        else:
+            print("Nenhuma disputa cadastrada.")
 
+    def exibirDiasDisputa(self):
+        disputas = self.diasDisputa
+        if disputas != []:
+            for i in range(len(disputas)):
+                print(f"{i + 1} {mt.exibir_data(disputas[i])}")
+        else:
+            print("Nenhuma disputa cadastrada.")
     def removerDisputaPeloIndice(self, indice: int, dia):
         disputas = self.getProximasDisputas(dia)
         self.diasDisputa.remove(disputas[indice])
@@ -243,13 +253,19 @@ class DisciplinaCurricular(Disciplina):
 
     def exibirDiasDeProva(self):
         provas = self.getProvas()
-        for i in range(len(provas)):
-            print(f"{i + 1}. {mt.exibir_data(provas[i].getData())}")
+        if provas != []:
+            for i in range(len(provas)):
+                print(f"{i + 1}. {mt.exibir_data(provas[i].getData())}")
+        else:
+            print("Nenhuma prova cadastrada.")
 
     def exibirListas(self):
         listas = self.getListas()
-        for i in range(len(listas)):
-            print(f"{i+1} Adicionada em {mt.exibir_data(listas[i].getData())}\n{listas[i].getFeitaString()}")
+        if listas != []:
+            for i in range(len(listas)):
+                print(f"{i+1} Adicionada em {mt.exibir_data(listas[i].getData())}\n{listas[i].getFeitaString()}")
+        else:
+            print("Nenhuma lista cadastrada.")
 
     def getListas(self):
         return(self.listas)
