@@ -10,7 +10,7 @@ import ModuloMenuAcademicoGeral as moduloMenuAcademico
 us = UsuarioService()
 usuario_logado: Usuario = None
 estado_disciplina = None
-estado = "Menu"
+estado = "Fora"
 
 def estado_hoje():
     global estado
@@ -339,6 +339,7 @@ def estado_registrando():
         if not r is None:
             usuario_logado = r
             estado = "Menu"
+            print("")
             break
 
 def estado_login():
@@ -348,13 +349,14 @@ def estado_login():
     while True:
         email = input("Digite o email da sua conta: ")
         if email.lower() == "sair":
-            estado = "Menu"
+            estado = "Fora"
             break
         senha = input("Digite a senha da sua conta: ")
         r = us.login(email,senha)
         if not r is None:
             usuario_logado = r
             estado = "Menu"
+            print("")
             break
 
 def estado_fora():
@@ -373,6 +375,14 @@ def estado_fora():
             print("Operação não identificada, tente novamente.")
 
 def estado_menu():
+    print(mt.exibir_data_hoje())
+    disciplinasConcluidas = usuario_logado.getDisciplinasConcluidas()
+    if len(disciplinasConcluidas) != 0:
+        print(
+            f"{len(disciplinasConcluidas)} se encerraram hoje! Removeremos elas automaticamente para você. Aqui estão os resultados... ")
+        for i in range(len(disciplinasConcluidas)):
+            print(disciplinasConcluidas[i].getMensagemAprovacao())
+        print("")
     global estado
     while True:
         opcao = input("O que você deseja realizar?\nVer o resumo de [Hoje]\nConsultar [Mochila] de Livros\n[Sugerir] "
@@ -410,12 +420,6 @@ def state_resolver():
     global estado
     global usuario_logado
     global estado_disciplina
-    disciplinasConcluidas = usuario_logado.getDisciplinasConcluidas()
-    if len(disciplinasConcluidas) != 0:
-        print(f"{len(disciplinasConcluidas)} se encerraram hoje! Removeremos elas automaticamente para você. Aqui estão os resultados... ")
-        for i in range(len(disciplinasConcluidas)):
-            print(disciplinasConcluidas[i].getMensagemAprovacao())
-        print("")
     if estado == "Fora":
         estado_fora()
     elif estado == "Logando":
@@ -464,25 +468,25 @@ def state_resolver():
         estado = "Menu"
 
 # Para fins de teste DO NOT SHIP
-us.registrar("Arthur","peneir20@gmail.com","abC..123","CC")
-us.registrar("Arthur1","peneir21@gmail.com","abC..123","CC")
-us.registrar("Arthur2","peneir22@gmail.com","abC..123","CC")
-us.registrar("Arthur3","peneir23@gmail.com","abC..123","Agronomia")
-us.registrar("Caio","cndelpizzo@gmail.com","abC..123","Agronomia")
-us.usuarios[0].switchPublicidade()
-us.usuarios[1].switchPublicidade()
-us.usuarios[3].switchPublicidade()
-us.usuarios[4].switchPublicidade()
-us.usuarios[0].addDisciplinaCurricular("Português",[0,1,2],7,["10:00","09:00","08:00"],["12:00","14:00","10:00"],0)
-us.usuarios[0].addDisciplinaCurricular("Matemática",[2,3,4],7,["08:00","09:00","14:00"],["10:00","14:00","16:00"],1)
+#us.registrar("Arthur","peneir20@gmail.com","abC..123","CC")
+#us.registrar("Arthur1","peneir21@gmail.com","abC..123","CC")
+#us.registrar("Arthur2","peneir22@gmail.com","abC..123","CC")
+#us.registrar("Arthur3","peneir23@gmail.com","abC..123","Agronomia")
+#us.registrar("Caio","cndelpizzo@gmail.com","abC..123","Agronomia")
+#us.usuarios[0].switchPublicidade()
+#us.usuarios[1].switchPublicidade()
+#us.usuarios[3].switchPublicidade()
+#us.usuarios[4].switchPublicidade()
+#us.usuarios[0].addDisciplinaCurricular("Português",[0,1,2],7,["10:00","09:00","08:00"],["12:00","14:00","10:00"],0)
+#us.usuarios[0].addDisciplinaCurricular("Matemática",[2,3,4],7,["08:00","09:00","14:00"],["10:00","14:00","16:00"],1)
 
-us.usuarios[0].adicionarBibliografiaADisciplina(0,Livro("Dicionário","Aurélio"))
-us.usuarios[0].adicionarBibliografiaADisciplina(0,Livro("Brás Cubas","Machado de Assis"))
+#us.usuarios[0].adicionarBibliografiaADisciplina(0,Livro("Dicionário","Aurélio"))
+#us.usuarios[0].adicionarBibliografiaADisciplina(0,Livro("Brás Cubas","Machado de Assis"))
 
-us.usuarios[0].adicionarBibliografiaADisciplina(1,Livro("Elementos","Euclides"))
-us.usuarios[0].adicionarBibliografiaADisciplina(1,Livro("Discrete Mathematics","Kolman"))
+#us.usuarios[0].adicionarBibliografiaADisciplina(1,Livro("Elementos","Euclides"))
+#us.usuarios[0].adicionarBibliografiaADisciplina(1,Livro("Discrete Mathematics","Kolman"))
 
-us.usuarios[0].mochilaDeLivros.configurar(1.50,2,2)
+#us.usuarios[0].mochilaDeLivros.configurar(1.50,2,2)
 #us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,25))
 #us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,29))
 #us.usuarios[0].marcarProvaNaDisciplina(0,date(2026,6,30))
@@ -491,11 +495,11 @@ us.usuarios[0].mochilaDeLivros.configurar(1.50,2,2)
 #us.usuarios[0].darNotaParaDisciplinaPeloIndice(0,1,8)
 #us.usuarios[0].darNotaParaDisciplinaPeloIndice(0,2,4)
 #us.usuarios[0].darNotaParaDisciplinaPeloIndice(1,0,5)
-us.usuarios[0].disciplinas[0].addProvas(date(2026,7,1))
-us.usuarios[0].disciplinas[1].addProvas(date(2026,7,1))
+#us.usuarios[0].disciplinas[0].addProvas(date(2026,7,1))
+#us.usuarios[0].disciplinas[1].addProvas(date(2026,7,1))
 
-usuario_logado = us.usuarios[0]
-estado = "Adicionar Livro"
+#usuario_logado = us.usuarios[0]
+#estado = "Adicionar Livro"
 while True:
     state_resolver()
     

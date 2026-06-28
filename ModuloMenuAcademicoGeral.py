@@ -9,11 +9,10 @@ import ModuloMenuDisciplinas as moduloMenuDisciplinas
 
 def estado_situacao_academica(estado, usuario: Usuario):
     hoje = mt.data_de_hoje()
-    disciplinas = usuario.getDisciplinasCurriculares()
+    disciplinas = usuario.getDisciplinas()
     for i in range (len(disciplinas)):
         print(disciplinas[i].get_nome())
-        print(f"Frequência parcial: {disciplinas[i].calcFrequenciaParcial():.2f}% | Frequência Total: {disciplinas[i].calcFrequenciaTotal():.2f}% | Nota Parcial: {disciplinas[i].getMediaIndefinida(hoje)}")
-        print("")
+        print(disciplinas[i].exibirSituacao(hoje))
     return "Menu", usuario
 
 def estado_sugerindo_estudos(estado, usuario: Usuario):

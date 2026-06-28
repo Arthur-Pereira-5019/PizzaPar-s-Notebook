@@ -21,15 +21,15 @@ def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
     for j in range(len(dias)):
         dias[j] = int(dias[j]) - 1
 
-    duracao = input("Duração da disciplina (em dias): ")
+    duracao = input("Duração da disciplina em dias (O sistema poderá arredondar o número de aulas): ")
     #print(type(duracao))
     invalido = True
     while invalido:
         invalido = False
         if not str(duracao).isnumeric():
             invalido = True
-            print("Duração inválida, tente novamente")
-            duracao = input("Duração da disciplina (em dias): ")
+            print("Duração inválida, tente novamente.")
+            duracao = input("Duração da disciplina em dias (O sistema poderá arredondar o número de aulas): ")
     duracao = int(duracao)
 
     horaInicio = []
@@ -77,7 +77,7 @@ def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
             print((hI), (hF))
             if hI != "" and hF != "":
                 if hI < horaInicio[-1] < hF or hI < horaFim[-1] < hF:
-                    print("Cuidado! Houve conflito de horario com a disciplina ", j.get_nome())
+                    print("Cuidado! Há um conflito de horário com a disciplina:", j.get_nome())
     ap_numero = 0
     while True:
         aptidao = input("Digite qual é a aptidao que melhor descreve essa disciplina? [Linguagens]/["
@@ -102,7 +102,7 @@ def adicionar_disciplinas_curriculares(usuario_logado: Usuario):
 
 def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
     dias_por_indice = {1: "Segunda", 2: "Terça", 3: "Quarta", 4: "Quinta", 5: "Sexta"}
-    nome = input("Nome da Disciplina: ")
+    nome = input("Nome da Disciplina Esportiva: ")
     print("Digite a lista de dias de disciplina, separados por espaços em branco.")
     dias = input("Dias de aula:\n[1]- Segunda\n[2]- Terça\n[3]- Quarta\n[4]- Quinta\n[5]- Sexta\n").split()
     invalido = True
@@ -116,7 +116,7 @@ def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
     for j in range(len(dias)):
         dias[j] = int(dias[j])-1
 
-    duracao = input("Duração da disciplina (em dias): ")
+    duracao = input("Duração da disciplina em dias (O sistema poderá arredondar o número de aulas): ")
     #print(type(duracao))
     invalido = True
     while invalido:
@@ -124,7 +124,7 @@ def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
         if not str(duracao).isnumeric():
             invalido = True
             print("Duração inválida, tente novamente")
-            duracao = input("Duração da disciplina (em dias): ")
+            duracao = input("Duração da disciplina em dias (O sistema poderá arredondar o número de aulas): ")
 
     duracao = int(duracao)
 
@@ -174,7 +174,7 @@ def adicionar_disciplinas_esportivas(usuario_logado: Usuario):
             print((hI), (hF))
             if hI != "" and hF != "":
                 if hI < horaInicio[-1] < hF or hI < horaFim[-1] < hF:
-                    print("Cuidado! Houve conflito de horario com a disciplina ", j.get_nome())
+                    print("Cuidado! Há um conflito de horário com a disciplina: ", j.get_nome())
 
     usuario_logado.addDisciplinaEsportiva(nome, dias, duracao, horaInicio, horaFim) #, dias_de_disputa )
     return "Menu",usuario_logado

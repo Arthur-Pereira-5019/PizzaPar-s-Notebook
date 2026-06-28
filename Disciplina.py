@@ -48,6 +48,22 @@ class Disciplina:
     def __eq__(self, other):
         return self.id == other.id
 
+    def calcFrequenciaParcial(self):
+        presencas = 0
+        if self.marcadorPresenca == 0:
+            return 0
+        for i in range (self.marcadorPresenca+1):
+            if self.listaDePresenca[i]:
+                presencas += 1
+        return presencas / (self.marcadorPresenca / 100)
+
+    def calcFrequenciaTotal(self):
+        presencas = 0
+        for i in range(len(self.listaDePresenca)):
+            if self.listaDePresenca[i]:
+                presencas += 1
+        return presencas / ((len(self.listaDePresenca)) / 100)
+
 class DisciplinaEsportiva(Disciplina):
     def __init__(self, nome, dias, duracao, horaInicio, horaFim):
         super().__init__(nome, dias, duracao, horaInicio, horaFim)
@@ -76,6 +92,10 @@ class DisciplinaEsportiva(Disciplina):
     def addDisputa(self, dia):
         self.diasDisputa.append(dia)
 
+    def exibirSituacao(self, data):
+        return f"Frequência parcial: {self.calcFrequenciaParcial():.2f}% | Frequência Total: {self.calcFrequenciaTotal():.2f}%"
+
+
     
 
 class DisciplinaCurricular(Disciplina):
@@ -98,7 +118,10 @@ class DisciplinaCurricular(Disciplina):
         if possivel:
             self.provas.append(Provas(data))
             self.provas = sorted(self.provas, key=lambda p: (p.getData()))
-        
+
+    def exibirSituacao(self, data):
+        return f"Frequência parcial: {self.calcFrequenciaParcial():.2f}% | Frequência Total: {self.calcFrequenciaTotal():.2f}% | Nota Parcial: {self.getMediaIndefinida(data)}"
+
     def addBibliografia(self, livro):
         self.bibliografia.append(livro)
 
@@ -192,22 +215,6 @@ class DisciplinaCurricular(Disciplina):
 
     def isApto(self, aptidoes):
         return aptidoes[self.aptidao]
-
-    def calcFrequenciaParcial(self):
-        presencas = 0
-        if self.marcadorPresenca == 0:
-            return 0
-        for i in range (self.marcadorPresenca+1):
-            if self.listaDePresenca[i]:
-                presencas += 1
-        return presencas / (self.marcadorPresenca / 100)
-
-    def calcFrequenciaTotal(self):
-        presencas = 0
-        for i in range(len(self.listaDePresenca)):
-            if self.listaDePresenca[i]:
-                presencas += 1
-        return presencas / ((len(self.listaDePresenca)) / 100)
 
     def getNListasAFazer(self):
         n = 0
