@@ -2,6 +2,7 @@ import re
 from Disciplina import *
 from MochilaDeLivros import *
 
+
 class Usuario():
     def __init__(self, nome: str, email: str, senha: str, curso: str):
         self.aptidoes = [False, False, False, False]
@@ -19,7 +20,7 @@ class Usuario():
     def switchPublicidade(self):
         self.publica = not self.publica
 
-    def setAptidoes(self,novasAptidoes):
+    def setAptidoes(self, novasAptidoes):
         self.aptidoes = novasAptidoes
 
     def setSenha(self, senha: str):
@@ -48,9 +49,8 @@ class Usuario():
     def setNome(self, nome: str):
         self.nome = nome
 
-
     # Restrição de só uma prova por disciplina
-    def provasHoje(self,dia:date):
+    def provasHoje(self, dia: date):
         provasHoje = []
         dcs = self.getDisciplinasCurriculares()
         for i in range(len(dcs)):
@@ -61,7 +61,7 @@ class Usuario():
                     provasHoje.append(disciplina)
         return provasHoje
 
-    def disputasHoje(self,dia:date):
+    def disputasHoje(self, dia: date):
         disputasHoje = []
         des = self.getDisciplinasEsportivas()
         for i in range(len(des)):
@@ -92,7 +92,7 @@ class Usuario():
         dcs = self.getDisciplinasCurriculares()
         if dcs != []:
             for i in range(len(dcs)):
-                print(f"{i+1}. {dcs[i].get_nome()}")
+                print(f"{i + 1}. {dcs[i].get_nome()}")
         else:
             print("Nenhuma disciplina curricular cadastrada.")
 
@@ -100,7 +100,7 @@ class Usuario():
         des = self.getDisciplinasEsportivas()
         if des != []:
             for i in range(len(des)):
-                print(f"{i+1}. {des[i].get_nome()}")
+                print(f"{i + 1}. {des[i].get_nome()}")
         else:
             print("Nenhuma disciplina esportiva cadastrada.")
 
@@ -123,7 +123,6 @@ class Usuario():
         dcs = self.getDisciplinasCurriculares()
         self.disciplinas.remove(dcs[indice])
 
-
     def adicionaDisputas(self, indiceRef):
         disciplinaRef = self.getDisciplinaEsportivaPeloIndice(indiceRef)
         indice = self.disciplinas.index(disciplinaRef)
@@ -133,23 +132,34 @@ class Usuario():
             while invalido:
                 invalido = False
                 if len(dias_de_disputa.split("/")) == 3:
-                    if dias_de_disputa.split("/")[0].isnumeric() and dias_de_disputa.split("/")[1].isnumeric() and dias_de_disputa.split("/")[2].isnumeric():
-                        if (len(dias_de_disputa.split("/")[0]) != 2 or len(dias_de_disputa.split("/")[1]) != 2
-                                or (
-                                int(dias_de_disputa.split("/")[0]) > 30 and int(dias_de_disputa.split("/")[1]) in [4, 6, 8,
-                                                                                                                   10,
-                                                                                                                   12]) or (
-                                int(dias_de_disputa.split("/")[0]) > 31 and int(dias_de_disputa.split("/")[1]) in [1, 3, 5,
-                                                                                                                   7,
-                                                                                                                   9,
-                                                                                                                   11]) or (
-                                int(dias_de_disputa.split("/")[0]) > 28 and int(dias_de_disputa.split("/")[1]) in [
-                            2] and mt.ano_e_bissexto() == False) or (int(dias_de_disputa.split("/")[0]) > 29 and int(
-                            dias_de_disputa.split("/")[1]) == 2 and mt.ano_e_bissexto() == True) or int(
-                            dias_de_disputa.split("/")[1]) > 12):
+                    if dias_de_disputa.split("/")[0].isnumeric() and dias_de_disputa.split("/")[1].isnumeric() and \
+                            dias_de_disputa.split("/")[2].isnumeric():
+                        if (len(dias_de_disputa.split("/")[0]) != 2 or len(dias_de_disputa.split("/")[1]) != 2 or len(
+                                dias_de_disputa.split("/")[2]) != 4
+                            or (int(dias_de_disputa.split("/")[0]) <= 0 or int(dias_de_disputa.split("/")[1]) <= 0 or int(
+                                    dias_de_disputa.split("/")[2]) <= 0)
+                            or (
+                                    int(dias_de_disputa.split("/")[0]) > 30 and int(
+                                dias_de_disputa.split("/")[1]) in [4, 6, 8,
+                                                                   10,
+                                                                   12]) or (
+                                    int(dias_de_disputa.split("/")[0]) > 31 and int(
+                                dias_de_disputa.split("/")[1]) in [1, 3, 5,
+                                                                   7,
+                                                                   9,
+                                                                   11]) or (
+                                    int(dias_de_disputa.split("/")[0]) > 28 and int(
+                                dias_de_disputa.split("/")[1]) in [
+                                        2] and mt.ano_e_bissexto() == False) or (
+                                    int(dias_de_disputa.split("/")[0]) > 29 and int(
+                                dias_de_disputa.split("/")[1]) == 2 and mt.ano_e_bissexto() == True) or int(
+                                    int(dias_de_disputa.split("/")[1]) > 12)) or int(dias_de_disputa.split("/")[2]) <= 0:
                             invalido = True
                             print("Dia inválido, tente novamente")
                             dias_de_disputa = input("Dia de Disputa (DD/MM/YYYY): ")
+                        else:
+                            dias_de_disputa = date(int(dias_de_disputa[6::]), int(dias_de_disputa[3:5:]),int(dias_de_disputa[:2:]))
+
                     else:
                         invalido = True
                         print("Dias inválidos, tente novamente")
@@ -159,11 +169,12 @@ class Usuario():
                     print(dias_de_disputa)
                     print("Formato inválido, tente novamente")
                     dias_de_disputa = input("Dia de Disputa (DD/MM/YYYY): ")
-            dias_de_disputa = date(int(dias_de_disputa[6::]), int(dias_de_disputa[3:5:]), int(dias_de_disputa[:2:]))
+
             colisao = self.stringColisao(dias_de_disputa)
             self.disciplinas[indice].addDisputa(dias_de_disputa)
             if colisao != "":
-                print(f"Há uma colisão de eventos neste dia com uma {colisao}, se certifique de atender ao mais importante e se organizar com antecedência.")
+                print(
+                    f"Há uma colisão de eventos neste dia com uma {colisao}, se certifique de atender ao mais importante e se organizar com antecedência.")
 
     def stringColisao(self, dia):
         if self.provasHoje(dia):
@@ -190,8 +201,9 @@ class Usuario():
                 return self.disciplinas[i]
         return None
 
-    def disciplinasSugeridas(self,n: int,dia: date):
-        retorno = sorted(self.getDisciplinasCurriculares(), key=lambda d: (d.pesoParaEstudar(dia,self.aptidoes)),reverse=True)
+    def disciplinasSugeridas(self, n: int, dia: date):
+        retorno = sorted(self.getDisciplinasCurriculares(), key=lambda d: (d.pesoParaEstudar(dia, self.aptidoes)),
+                         reverse=True)
         return retorno[0:n]
 
     def getAptidoes(self):
@@ -210,7 +222,7 @@ class Usuario():
         for i in range(len(dcs)):
             if dcs[i].isConcluida():
                 retorno.append(dcs[i])
-        for i in range (len(retorno)):
+        for i in range(len(retorno)):
             self.disciplinas.remove(retorno[i])
         return retorno
 
@@ -238,15 +250,14 @@ class Usuario():
     def getNListasAFazer(self):
         dcs = self.getDisciplinasCurriculares()
         total = 0
-        for i in range (len(dcs)):
+        for i in range(len(dcs)):
             total += dcs[i].getNListasAFazer()
         return total
 
-    def darNotaParaDisciplinaPeloIndice(self, indiceRef: int, indiceProva:int, nota):
+    def darNotaParaDisciplinaPeloIndice(self, indiceRef: int, indiceProva: int, nota):
         dc = self.getDisciplinaCurricularPeloIndice(indiceRef)
         indice = self.disciplinas.index(dc)
         self.disciplinas[indice].darNotaPeloIndice(indiceProva, nota)
-
 
     def adicionaProvas(self, indiceRef):
         disciplinaRef = self.getDisciplinaCurricularPeloIndice(indiceRef)
@@ -257,52 +268,63 @@ class Usuario():
             while invalido:
                 invalido = False
                 if len(dias_de_prova.split("/")) == 3:
-                    if dias_de_prova.split("/")[0].isnumeric() and dias_de_prova.split("/")[1].isnumeric() and dias_de_prova.split("/")[2].isnumeric():
-                        if (len(dias_de_prova.split("/")[0]) != 2 or len(dias_de_prova.split("/")[1]) != 2
-                                or (
-                                int(dias_de_prova.split("/")[0]) > 30 and int(dias_de_prova.split("/")[1]) in [4, 6, 8,
-                                                                                                                   10,
-                                                                                                                   12]) or (
-                                int(dias_de_prova.split("/")[0]) > 31 and int(dias_de_prova.split("/")[1]) in [1, 3, 5,
-                                                                                                                   7,
-                                                                                                                   9,
-                                                                                                                   11]) or (
-                                int(dias_de_prova.split("/")[0]) > 28 and int(dias_de_prova.split("/")[1]) in [
-                            2] and mt.ano_e_bissexto() == False) or (int(dias_de_prova.split("/")[0]) > 29 and int(
-                            dias_de_prova.split("/")[1]) == 2 and mt.ano_e_bissexto() == True) or int(
-                            dias_de_prova.split("/")[1]) > 12):
+                    if dias_de_prova.split("/")[0].isnumeric() and dias_de_prova.split("/")[1].isnumeric() and \
+                            dias_de_prova.split("/")[2].isnumeric():
+                        if (len(dias_de_prova.split("/")[0]) != 2 or len(dias_de_prova.split("/")[1]) != 2 or len(
+                                dias_de_prova.split("/")[2]) != 4
+                            or (int(dias_de_prova.split("/")[0]) <= 0) or (int(dias_de_prova.split("/")[1]) <= 0) or (int(dias_de_prova.split("/")[2]) <= 0)) or (
+                                    int(dias_de_prova.split("/")[0]) > 30 and int(
+                                dias_de_prova.split("/")[1]) in [4, 6, 8,
+                                                                   10,
+                                                                   12]) or (
+                                    int(dias_de_prova.split("/")[0]) > 31 and int(
+                                dias_de_prova.split("/")[1]) in [1, 3, 5,
+                                                                   7,
+                                                                   9,
+                                                                   11]) or (
+                                    int(dias_de_prova.split("/")[0]) > 28 and int(
+                                dias_de_prova.split("/")[1]) in [
+                                        2] and mt.ano_e_bissexto() == False) or (
+                                    int(dias_de_prova.split("/")[0]) > 29 and int(
+                                dias_de_prova.split("/")[1]) == 2 and mt.ano_e_bissexto() == True) or int(
+                                    int(dias_de_prova.split("/")[1]) > 12) or int(dias_de_prova.split("/")[2]) <= 0:
                             invalido = True
                             print("Dia inválido, tente novamente")
-                            dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
+                            dias_de_prova = input("Dia de Disputa (DD/MM/YYYY): ")
+                        else:
+                            dias_de_prova = date(int(dias_de_prova[6::]), int(dias_de_prova[3:5:]),
+                                                 int(dias_de_prova[:2:]))
+                            if dias_de_prova.weekday() in self.disciplinas[indice].get_dias():
+                                # self.disciplinas[indice].addProvas(dias_de_prova)
+                                print(
+                                    f"Sucesso, prova marcada no dia: {mt.exibir_data(dias_de_prova)} às {self.disciplinas[indice].getHoraInicioHoje(dias_de_prova.weekday())}")
+                            else:
+                                #print(dias_de_prova.weekday())
+                                #print(self.disciplinas[indice].get_dias())
+                                print("Erro, prova marcada no dia sem a disciplina!")
+                                dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
+                                invalido = True
                     else:
                         invalido = True
                         print("Dias inválidos, tente novamente")
-                        dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
+                        dias_de_prova = input("Dia de Disputa (DD/MM/YYYY): ")
                 else:
                     invalido = True
-                    #print(dias_de_prova)
+                    print(dias_de_prova)
                     print("Formato inválido, tente novamente")
-                    dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
-                dias_de_prova = date(int(dias_de_prova[6::]), int(dias_de_prova[3:5:]), int(dias_de_prova[:2:]))
-                if dias_de_prova.weekday() in self.disciplinas[indice].get_dias():
-                    #self.disciplinas[indice].addProvas(dias_de_prova)
-                    print(
-                        f"Sucesso, prova marcada no dia: {mt.exibir_data(dias_de_prova)} às {self.disciplinas[indice].getHoraInicioHoje(dias_de_prova.weekday())}")
-                else:
-                    print(dias_de_prova.weekday())
-                    print(self.disciplinas[indice].get_dias())
-                    print("Erro, prova marcada no dia sem a disciplina!")
-                    dias_de_prova = input("Dia de Prova (DD/MM/YYYY): ")
-                    invalido = True
+                    dias_de_prova = input("Dia de Disputa (DD/MM/YYYY): ")
             colisao = self.stringColisao(dias_de_prova)
             self.disciplinas[indice].addProvas(dias_de_prova)
             if colisao != "":
-                print(f"Há uma colisão de eventos neste dia com uma {colisao}, se certifique de atender ao mais importante e se organizar com antecedência.")
+                print(
+                    f"Há uma colisão de eventos neste dia com uma {colisao}, se certifique de atender ao mais importante e se organizar com antecedência.")
 
     def adicionaListas(self, indiceRef):
         hoje = mt.data_de_hoje()
         disciplinaRef = self.getDisciplinaCurricularPeloIndice(indiceRef)
         indice = self.disciplinas.index(disciplinaRef)
+        # print(disciplinaRef.get_nome())
+        # print(self.disciplinas[indice].get_nome())
         self.disciplinas[indice].addListas(hoje)
         print("Lista adicionada com sucesso")
 
@@ -321,7 +343,7 @@ class Usuario():
                 self.disciplinas[i].marcarPresenca(presenca)
 
     def adicionarBibliografiaADisciplina(self, id: int, livro: Livro):
-        for i in range (len(self.disciplinas)):
+        for i in range(len(self.disciplinas)):
             if self.disciplinas[i].id == id:
                 self.disciplinas[i].addBibliografia(livro)
 

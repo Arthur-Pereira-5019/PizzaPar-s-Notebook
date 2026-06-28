@@ -256,6 +256,7 @@ class DisciplinaCurricular(Disciplina):
         if provas != []:
             for i in range(len(provas)):
                 print(f"{i + 1}. {mt.exibir_data(provas[i].getData())}")
+                print("Nota: ", provas[i].getNota())
         else:
             print("Nenhuma prova cadastrada.")
 
